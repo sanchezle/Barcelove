@@ -25,6 +25,9 @@
     "url": "https://github.com/sanchezle/Barcelove/issues"
   },
   "homepage": "https://github.com/sanchezle/Barcelove#readme",
+  "engines": {
+    "node": "18.16.1"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",

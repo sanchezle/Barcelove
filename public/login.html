@@ -2,14 +2,18 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <form action="/login" method="post">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username"><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password"><br>
+    <h1>Login</h1>
+    <form action="/login" method="POST">
+        <label for="identifier">Email or Username:</label>
+        <input type="text" id="identifier" name="identifier" required>
+        <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+
         <input type="submit" value="Login">
     </form>
 </body>

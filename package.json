@@ -2,11 +2,8 @@
   "name": "barcelove",
   "version": "1.0.0",
   "description": "mobile-app barcelona challenge geolocation",
-
   "main": "app.js",
- 
   "scripts": {
-    
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -37,10 +34,11 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.4",
+    "nedb": "^1.8.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^6.1.0",
-    "nedb": "^1.8.0"
+    "passport-local-mongoose": "^6.1.0"
   }
 }

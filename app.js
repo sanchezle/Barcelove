@@ -42,9 +42,16 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   //middleware  
   const register = require('./routes/register');
   const login = require('./routes/login');
+  const challenges = require('./routes/challenges');
+  const authRoutes = require('./routes/auth');
+
+
 
   app.use(register);
   app.use(login);
+  app.use(challenges);
+  app.use(authRoutes);
+  
 
   // fetch user profile
   app.get('/user/:userId', (req, res) => {

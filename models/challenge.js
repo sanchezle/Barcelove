@@ -15,4 +15,6 @@ const ChallengeSchema = new Schema({
     totalScore: Number  // total score for the challenge
 });
 
+
+
 module.exports = mongoose.model('Challenge', ChallengeSchema);

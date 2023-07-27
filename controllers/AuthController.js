@@ -56,18 +56,19 @@ const login = (req, res, next) => {
                         res.json({
                             message: 'Password does not match!'
                         })
-                    }else{
+                    }
                         res.json({
                             message: 'No user found!'
                         })
                     }
-                }
-            })
-        }
-    })
+
+                })
+            }
+        })
+    }
+    
 
 
 
 
-
-module.exports = { register, login }
+module.exports = { register, login };

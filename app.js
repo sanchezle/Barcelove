@@ -1,47 +1,62 @@
 const express = require('express');
-const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const Challeng = require('./models/challenge');
-const path = require('path');
+const fetch = require('node-fetch');
 const User = require('./models/User');
 const bcrypt = require('bcrypt');
-const { template } = require('lodash');
-const authController = require('./controllers/auth');
 
-const port = 3000;
+const MongoStoreFactory = require('connect-mongo');
+const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
+
+const app = express();
+const port = process.env.PORT || 3001;
 
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 
-mongoose.connect('mongodb://localhost:27017/Barcelove', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Database connected!'))
-    .catch(err => console.log(err));
+mongoose.connect('mongodb://localhost:27017/Barcelove', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Database connected!');
+  // Start the server after successful database connection
 
-//index route
+  // Use the MongoDB connection from Mongoose in the session store
+  app.use(
+    session({
+      secret: 'your_secret_key',
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore, // Use the MongoStore instance directly
+      cookie: { maxAge: 1000 * 60 * 60 * 24 }, // Set the session cookie options as needed
+    })
+  );
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(templates, 'views', 'index.html'));
-});
+  app.use(express.static('public'));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+
+  //middleware  
+  const register = require('./routes/register');
+  const login = require('./routes/login');
+  const challenges = require('./routes/challenges');
+  const authRoutes = require('./routes/auth');
 
 
-// user registration
-app.post('/register', (req, res) => {
-    // registration logic here
-  });
+
+  app.use(register);
+  app.use(login);
+  app.use(challenges);
+  app.use(authRoutes);
   
-  // user login
-  app.post('/login', (req, res) => {
-    // login logic here
-  });
-  
+
   // fetch user profile
   app.get('/user/:userId', (req, res) => {
     // fetch user profile logic here
   });
-  
-user();
 
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+  app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+}).catch(err => console.log(err));

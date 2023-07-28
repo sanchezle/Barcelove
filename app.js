@@ -7,12 +7,13 @@ const Challeng = require('./models/challenge');
 const fetch = require('node-fetch');
 const User = require('./models/User');
 const bcrypt = require('bcrypt');
+const path = require('path');
 
 const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -35,28 +36,54 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
     })
   );
 
-  app.use(express.static('public'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-
+    
   //middleware  
-  const register = require('./routes/register');
-  const login = require('./routes/login');
+
+
+
+
+  // Custom middleware to check if the user is logged in
+  function isLoggedIn(req, res, next) {
+    if (req.session.user) {
+      // User is logged in, proceed to the next middleware or route handler
+      next();
+    } else {
+      // User is not logged in
+      // Redirect to the login page if the requested URL is not '/login'
+      if (req.originalUrl !== '/login') {
+        return res.redirect('/login');
+      }
+      // If the requested URL is '/login', proceed to serve the login.html file
+      next();
+    }
+  }
+
+  // Route for the login page
+  app.get('/login', (req, res) => {
+    const loginFilePath = path.join(__dirname, 'public', 'login.html');
+    res.sendFile(loginFilePath);
+  });
+
+  // Route for the index page
+  app.get('/index', isLoggedIn, (req, res) => {
+    const indexFilePath = path.join(__dirname, 'public', 'index.html');
+    res.sendFile(indexFilePath);
+  });
+
   const challenges = require('./routes/challengesR');
   const authRoutes = require('./controllers/auth');
 
 
 
-  app.use(register);
-  app.use(login);
-  app.use(challenges);
-  app.use(authRoutes);
-  
+  app.use('/challenges', isLoggedIn, challenges);
+  app.use('/auth', isLoggedIn, authRoutes);
 
-  // fetch user profile
-  app.get('/user/:userId', (req, res) => {
-    // fetch user profile logic here
-  });
+ 
+  // This middleware will serve static files from the 'public' directory
+  app.use(express.static('public'));
+
 
   app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 }).catch(err => console.log(err));

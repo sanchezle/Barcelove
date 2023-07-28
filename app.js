@@ -42,8 +42,8 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   //middleware  
   const register = require('./routes/register');
   const login = require('./routes/login');
-  const challenges = require('./routes/challenges');
-  const authRoutes = require('./routes/auth');
+  const challenges = require('./routes/challengesR');
+  const authRoutes = require('./controllers/auth');
 
 
 

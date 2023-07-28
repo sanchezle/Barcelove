@@ -1,22 +1,25 @@
 const user = require('../models/user');
 const bcrypt = require('bcryptjs');
+const { response } = require('express');
 const jwt = require('jsonwebtoken');
 
 
 const profile = (req, res, next ) => {
-    user.findOne({username: req.params.username})
-    .then(user => {
+    let userprofile = req.body.profile
+    user.findOne(userprofile)
+    .then(response => {
         res.json({
-            user
+            response
         })
-    }
-    )
+    })
     .catch(error => {
         res.json({
             message: 'An error occured!'
         })
     })
 }
+
+
 
 const profileDescription = (req, res, next ) => {
     user.findOne({username: req.params.username})
@@ -34,19 +37,20 @@ const profileDescription = (req, res, next ) => {
 }
 
 const profileImage = (req, res, next ) => {
+    let UserID = req.body
     user.findOne({username: req.params.username})
-    .then(user => {
-        res.json({
-            user
+    .then(response => {
+        res.json({ 
+            response
         })
-    }
-    )
+    })
     .catch(error => {
         res.json({
             message: 'An error occured!'
         })
     })
 }
+            
 
 const updateProfile = (req, res, next ) => {
     user.findOneAndUpdate({username: req.params.username}, req.body)

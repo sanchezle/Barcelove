@@ -8,12 +8,15 @@ const fetch = require('node-fetch');
 const User = require('./models/User');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const morgan = require('morgan');
+const { response } = require('express');
+const logout = require('./routes/logout');
 
 const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3003;
 
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -36,6 +39,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
     })
   );
 
+  app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
     
@@ -72,6 +76,9 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
     res.sendFile(indexFilePath);
   });
 
+  //logout
+  app.use('/logout', logout);
+  
   const challenges = require('./routes/challengesR');
   const authRoutes = require('./controllers/auth');
 

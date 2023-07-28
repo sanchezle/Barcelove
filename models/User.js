@@ -6,6 +6,10 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     username: { type: String, required: true, unique: true },
+    profile: { 
+        description: { type: String, default: '' },
+        image: { type: String, default: '' },
+    },
     wallet: {
         balance: { type: Number, default: 0 },
         currency: { type: String, default: 'USD' },

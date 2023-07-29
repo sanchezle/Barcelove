@@ -1,11 +1,7 @@
-const user = require('../models/user');
-const bcrypt = require('bcryptjs');
-const { response } = require('express');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/User')
 
 const index = (req, res, next ) => {
-    user.find()
+    User.find()
     .then(response => {
         res.json({
             response
@@ -19,7 +15,7 @@ const index = (req, res, next ) => {
 }
 
 const profile = (req, res, next ) => {
-    let userID = req.body.UserID
+    let userID = req.body.userID
     User.findById(userID)
     .then(response => {
         res.json({
@@ -38,7 +34,7 @@ const profile = (req, res, next ) => {
 
 
 const profileDescription = (req, res, next ) => {
-    user.findOne({username: req.params.username})
+    User.findOne({username: req.params.username})
     .then(user => {
         res.json({
             user
@@ -53,8 +49,8 @@ const profileDescription = (req, res, next ) => {
 }
 
 const profileImage = (req, res, next ) => {
-    let UserID = req.body
-    user.findOne({username: req.params.username})
+    let userID = req.body.userID
+    User.findOne({username: req.params.username})
     .then(response => {
         res.json({ 
             response
@@ -82,7 +78,7 @@ const updateProfile = (req, res, next ) => {
             image: req.body.image
         }
     }
-    user.findByIdAndUpdate(userID, {$set: updatedData})
+    User.findByIdAndUpdate(userID, {$set: updatedData})
     .then(() => {
         res.json({
             message: 'User updated successfully!'
@@ -104,7 +100,7 @@ const createchallenge = (req, res, next ) => {
         },
         score: req.body.score
     }
-    user.findByIdAndUpdate(userID, {$set: updatedData})
+    User.findByIdAndUpdate(userID, {$set: updatedData})
     .then(() => {
         res.json({
             message: 'User updated successfully!'
@@ -122,7 +118,7 @@ const createchallenge = (req, res, next ) => {
 
 const delteUser = (req, res, next ) => {
     let userID = req.body.userID
-    user.findByIdAndRemove(userID)
+    User.findByIdAndRemove(userID)
     .then(() => {
         res.json({
             message: 'User deleted successfully!'

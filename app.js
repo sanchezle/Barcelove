@@ -12,6 +12,7 @@ const morgan = require('morgan');
 const { response } = require('express');
 const logout = require('./routes/logout');
 
+const UserControllers = require('./userControllers');
 const UserRouter = require('./routes/userR');
 
 const MongoStoreFactory = require('connect-mongo');
@@ -46,7 +47,10 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   app.use(bodyParser.json());
     
   //middleware  
-
+  app.get('/profile', (req, res) => {
+    res.sendFile(__dirname , 'public', '/profile.html');
+  });
+  
 
   const challenges = require('./routes/challengesR');
   const authRoutes = require('./controllers/auth');
@@ -55,7 +59,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
 
   app.use('/challenges', challenges);
   app.use('/auth', authRoutes);
-
+  app.use('/user', UserRouter);
 
 
 

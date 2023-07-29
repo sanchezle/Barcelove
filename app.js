@@ -12,6 +12,8 @@ const morgan = require('morgan');
 const { response } = require('express');
 const logout = require('./routes/logout');
 
+const UserRouter = require('./routes/userR');
+
 const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
@@ -80,3 +82,6 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
 
   app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 }).catch(err => console.log(err));
+
+
+app.use('/api/user', UserRouter);

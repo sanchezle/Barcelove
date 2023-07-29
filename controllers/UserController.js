@@ -33,35 +33,6 @@ const profile = (req, res, next ) => {
 
 
 
-const profileDescription = (req, res, next ) => {
-    User.findOne({username: req.params.username})
-    .then(user => {
-        res.json({
-            user
-        })
-    }
-    )
-    .catch(error => {
-        res.json({
-            message: 'An error occured!'
-        })
-    })
-}
-
-const profileImage = (req, res, next ) => {
-    let userID = req.body.userID
-    User.findOne({username: req.params.username})
-    .then(response => {
-        res.json({ 
-            response
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: 'An error occured!'
-        })
-    })
-}
             
 
 
@@ -132,4 +103,4 @@ const delteUser = (req, res, next ) => {
 }
 
 
-module.exports = {index, profile, profileDescription, profileImage, updateProfile, createchallenge, delteUser }
+module.exports = {index, profile, updateProfile, createchallenge, delteUser }

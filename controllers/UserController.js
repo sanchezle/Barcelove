@@ -2,11 +2,10 @@ const user = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { response } = require('express');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-
-const profile = (req, res, next ) => {
-    let userprofile = req.body.profile
-    user.findOne(userprofile)
+const index = (req, res, next ) => {
+    user.find()
     .then(response => {
         res.json({
             response
@@ -18,6 +17,23 @@ const profile = (req, res, next ) => {
         })
     })
 }
+
+const profile = (req, res, next ) => {
+    let userID = req.body.UserID
+    User.findById(userID)
+    .then(response => {
+        res.json({
+            response
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'An error occured!'
+        })
+    })
+}
+
+
 
 
 
@@ -52,29 +68,66 @@ const profileImage = (req, res, next ) => {
 }
             
 
+
 const updateProfile = (req, res, next ) => {
-    user.findOneAndUpdate({username: req.params.username}, req.body)
-    .then(user => {
-        res.json({
-            user
-        })
+    let userID = req.body.userID
+
+    let updatedData = {
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+
+        profile: {
+            description: req.body.description,
+            image: req.body.image
+        }
     }
-    )
+    user.findByIdAndUpdate(userID, {$set: updatedData})
+    .then(() => {
+        res.json({
+            message: 'User updated successfully!'
+        })
+    })
     .catch(error => {
         res.json({
             message: 'An error occured!'
         })
     })
 }
+
+const createchallenge = (req, res, next ) => {
+    let userID = req.body.userID
+    let updatedData = {
+        challenges: {
+            completed: req.body.completed,
+            ongoing: req.body.ongoing
+        },
+        score: req.body.score
+    }
+    user.findByIdAndUpdate(userID, {$set: updatedData})
+    .then(() => {
+        res.json({
+            message: 'User updated successfully!'
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'An error occured!'
+        })
+    })
+}
+
+
+
 
 const delteUser = (req, res, next ) => {
-    user.findOneAndDelete({username: req.params.username})
-    .then(user => {
+    let userID = req.body.userID
+    user.findByIdAndRemove(userID)
+    .then(() => {
         res.json({
-            user
+            message: 'User deleted successfully!'
         })
-    }
-    )
+    })
     .catch(error => {
         res.json({
             message: 'An error occured!'
@@ -82,4 +135,5 @@ const delteUser = (req, res, next ) => {
     })
 }
 
-module.exports = { profile, profileDescription, profileImage, updateProfile, delteUser }
+
+module.exports = {index, profile, profileDescription, profileImage, updateProfile, createchallenge, delteUser }

@@ -16,7 +16,7 @@ const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3005;
 
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -46,23 +46,16 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   //middleware  
 
 
+  const challenges = require('./routes/challengesR');
+  const authRoutes = require('./controllers/auth');
 
 
-  // Custom middleware to check if the user is logged in
-  function isLoggedIn(req, res, next) {
-    if (req.session.user) {
-      // User is logged in, proceed to the next middleware or route handler
-      next();
-    } else {
-      // User is not logged in
-      // Redirect to the login page if the requested URL is not '/login'
-      if (req.originalUrl !== '/login') {
-        return res.redirect('/login');
-      }
-      // If the requested URL is '/login', proceed to serve the login.html file
-      next();
-    }
-  }
+
+  app.use('/challenges', challenges);
+  app.use('/auth', authRoutes);
+
+
+
 
   // Route for the login page
   app.get('/login', (req, res) => {
@@ -71,7 +64,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   });
 
   // Route for the index page
-  app.get('/index', isLoggedIn, (req, res) => {
+  app.get('/index', authRoutes, (req, res) => {
     const indexFilePath = path.join(__dirname, 'public', 'index.html');
     res.sendFile(indexFilePath);
   });
@@ -79,13 +72,6 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   //logout
   app.use('/logout', logout);
   
-  const challenges = require('./routes/challengesR');
-  const authRoutes = require('./controllers/auth');
-
-
-
-  app.use('/challenges', isLoggedIn, challenges);
-  app.use('/auth', isLoggedIn, authRoutes);
 
  
   // This middleware will serve static files from the 'public' directory

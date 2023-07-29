@@ -1,5 +1,4 @@
 
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -33,38 +32,42 @@ const register = (req, res, next ) => {
     })
 }
 
+const login = (req, res, next) => {
+    var username = req.body.username
+    var password = req.body.password
 
+    User.findOne({$or: [{email:username},{username:username}]})
+    .then(user => {
+        if(user){
+            bcrypt.compare(password, user.password, function(err, result){
+                if(err){
+                    res.json({
+                        error:err
+                    })
+                    if (result){
+                        let token = jwt.sign({name: user.name}, 'verySecrestValue', {expiresIn: '1h'})
+                        res.json({
 
-// Login middleware
-async function login(req, res, next) {
-  const { username, password } = req.body;
+                            message: 'Login Successful!',
+                            token
+                        })
 
-  try {
-    // Find the user by username in the database
-    const user = await User.findOne({ username });
+                }else{
+                    res.json({
+                            message: 'Password does not match!'
+                            .then(redirct('/login'))
+                        })
+                    }
+                }else{
+                        res.json({
+                            message: 'No user found!'
+                            .then(redirct('/login'))
+                        })
+                    }
+                }
+            )
+        }
+    })
 
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Compare the entered password with the hashed password in the database
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Authentication successful
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
-  }
 }
-
-module.exports = login;
-
-
-
-
-module.exports = { register, login };
+module.exports = { register, login }

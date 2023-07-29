@@ -13,13 +13,13 @@ const userSchema = new Schema({
     wallet: {
         balance: { type: Number, default: 0 },
         currency: { type: String, default: 'USD' },
-    },
+    },    userQR: { type: String, default: '' },
     challenges: {
         completed: { type: [String], default: [] },
         ongoing: { type: [String], default: [] },
     },
     score: { type: Number, default: 0 },
-});
+},{timestamps: true});
 
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {
@@ -27,6 +27,7 @@ userSchema.pre('save', async function(next) {
     }
     next();
 });
+
 
 const User = mongoose.model('User', userSchema);
 

@@ -1,7 +1,8 @@
 
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+
 
 
 
@@ -45,7 +46,7 @@ const login = (req, res, next) => {
                         error:err
                     })
                     if (result){
-                        let token = jwt.sign({name: user.name}, 'verySecrestValue', {expiresIn: '1h'})
+                        let token = jwt.sign({name: user.username}, 'verySecrestValue', {expiresIn: '1h'})
                         res.json({
 
                             message: 'Login Successful!',
@@ -55,19 +56,18 @@ const login = (req, res, next) => {
                 }else{
                     res.json({
                             message: 'Password does not match!'
-                            .then(redirct('/login'))
                         })
                     }
                 }else{
                         res.json({
                             message: 'No user found!'
-                            .then(redirct('/login'))
                         })
-                    }
                 }
-            )
+            })
         }
     })
-
 }
+
+
+
 module.exports = { register, login }

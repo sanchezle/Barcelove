@@ -11,7 +11,7 @@ const Challeng = require('./models/challenge');
 const fetch = require('node-fetch');
 const User = require('./models/User');
 const challengesRouter = require('./routes/challengesR');
-const authRoutes = require('./controllers/auth');
+const AuthRoutes = require('./routes/auth');
 
 const logout = require('./routes/logout');
 
@@ -42,7 +42,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   app.use('/uploads', express.static('uploads'));
   
   app.use('/challenges', challengesRouter);
-  app.use('/auth', authRoutes);
+  app.use('/auth', AuthRoutes);
   app.use('/user', UserRouter);
 
 
@@ -67,7 +67,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   );
 
   // Route for the index page
-  app.get('/index', authRoutes, (req, res) => {
+  app.get('/index', AuthRoutes, (req, res) => {
     const indexFilePath = path.join(__dirname, 'public', 'index.html');
     res.sendFile(indexFilePath);
   });
@@ -92,3 +92,4 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
 
 
 app.use('/api/user', UserRouter);
+app.use('/api', AuthRoutes);

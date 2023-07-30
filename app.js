@@ -3,16 +3,19 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const Challeng = require('./models/challenge');
-const fetch = require('node-fetch');
-const User = require('./models/User');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const morgan = require('morgan');
 const { response } = require('express');
+const Challeng = require('./models/challenge');
+const fetch = require('node-fetch');
+const User = require('./models/User');
+const challengesRouter = require('./routes/challengesR');
+const authRoutes = require('./controllers/auth');
+
 const logout = require('./routes/logout');
 
-const UserControllers = require('./userControllers');
+const UserControllers = require('./controllers/UserController');
 const UserRouter = require('./routes/userR');
 
 const MongoStoreFactory = require('connect-mongo');
@@ -21,8 +24,7 @@ const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:270
 const app = express();
 const port = process.env.PORT || 3005;
 
-const saltRounds = 10;
-const salt = bcrypt.genSaltSync(saltRounds);
+
 
 mongoose.connect('mongodb://localhost:27017/Barcelove', {
   useNewUrlParser: true,
@@ -32,6 +34,28 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   // Start the server after successful database connection
 
   // Use the MongoDB connection from Mongoose in the session store
+
+
+  app.use(morgan('dev'));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  app.use('/uploads', express.static('uploads'));
+  
+  app.use('/challenges', challengesRouter);
+  app.use('/auth', authRoutes);
+  app.use('/user', UserRouter);
+
+
+
+  //middleware  
+ 
+
+  // Route for the login page
+  app.get('/login', (req, res) => {
+    const loginFilePath = path.join(__dirname, 'public', 'login.html');
+    res.sendFile(loginFilePath);
+  });
+
   app.use(
     session({
       secret: 'your_secret_key',
@@ -42,38 +66,17 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
     })
   );
 
-  app.use(morgan('dev'));
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
-    
-  //middleware  
-  app.get('/profile', (req, res) => {
-    res.sendFile(__dirname , 'public', '/profile.html');
-  });
-  
-
-  const challenges = require('./routes/challengesR');
-  const authRoutes = require('./controllers/auth');
-
-
-
-  app.use('/challenges', challenges);
-  app.use('/auth', authRoutes);
-  app.use('/user', UserRouter);
-
-
-
-  // Route for the login page
-  app.get('/login', (req, res) => {
-    const loginFilePath = path.join(__dirname, 'public', 'login.html');
-    res.sendFile(loginFilePath);
-  });
-
   // Route for the index page
   app.get('/index', authRoutes, (req, res) => {
     const indexFilePath = path.join(__dirname, 'public', 'index.html');
     res.sendFile(indexFilePath);
   });
+
+  app.get('/profile', (req, res) => {
+    res.sendFile(__dirname , 'public', '/profile.html');
+  });
+  
+
 
   //logout
   app.use('/logout', logout);

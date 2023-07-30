@@ -1,5 +1,29 @@
 const User = require('../models/User')
 
+
+const store = (req, res, next ) => {
+    let user = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+    })
+    if(req.file){
+        user.profile.picture = req.file.path
+    }
+    user.save()
+    .then(response => {
+        res.json({
+            message: 'User added successfully!'
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'An error occured!'
+        })
+    })
+}
+
+
 const index = (req, res, next ) => {
     User.find()
     .then(response => {
@@ -28,11 +52,6 @@ const profile = (req, res, next ) => {
         })
     })
 }
-
-
-
-
-
             
 
 
@@ -46,7 +65,7 @@ const updateProfile = (req, res, next ) => {
 
         profile: {
             description: req.body.description,
-            image: req.body.image
+            picture: req.body.image
         }
     }
     User.findByIdAndUpdate(userID, {$set: updatedData})
@@ -62,7 +81,7 @@ const updateProfile = (req, res, next ) => {
     })
 }
 
-const createchallenge = (req, res, next ) => {
+const createChallenge = (req, res, next ) => {
     let userID = req.body.userID
     let updatedData = {
         challenges: {
@@ -103,4 +122,4 @@ const delteUser = (req, res, next ) => {
 }
 
 
-module.exports = {index, profile, updateProfile, createchallenge, delteUser }
+module.exports = {store, index, profile, updateProfile, createChallenge, delteUser }

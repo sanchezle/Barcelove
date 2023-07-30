@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const UserControllers = require('../controllers/UserControllers');
+const UserController = require('../controllers/UserController');
+const upload = require('../middleware/upload');
 
-router.get('/profile', UserControllers.profile);
-router.get('/profile/:id', UserControllers.profile);
-router.get('/userlist', UserControllers.index);
-router.post('/update-profile', UserControllers.updateProfile);
-router.post('/createChallenge', UserControllers.createChallenge);
-router.post('/updateProfile', UserControllers.updateProfile);
+
+router.post('/store', upload.single('profile.picture'), UserController.store);
+router.post('/register', upload.single('profile/picture'), UserController.store);
+router.post('/update-profile', upload.single('profile.picture'), UserController.updateProfile);
+router.get('/profile', UserController.profile);
+router.get('/profile/:id', UserController.profile);
+router.get('/userslist', UserController.index);
+router.post('/update-profile', UserController.updateProfile);
+router.post('/createChallenge', UserController.createChallenge);
+router.post('/updateProfile', UserController.updateProfile);
 
 module.exports = router;

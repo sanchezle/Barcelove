@@ -46,7 +46,7 @@ const login = (req, res, next) => {
                         error:err
                     })
                     if (result){
-                        let token = jwt.sign({name: user.username}, 'verySecrestValue', {expiresIn: '1h'})
+                        let token = jwt.sign({name: user.username}, 'AzQ,PI)0(', {expiresIn: '1h'})
                         res.json({
 
                             message: 'Login Successful!',

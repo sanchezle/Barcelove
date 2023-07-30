@@ -2,12 +2,9 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const passport = require('passport');
-const bcrypt = require('bcrypt');
-const path = require('path');
 const morgan = require('morgan');
-const { response } = require('express');
-const Challeng = require('./models/challenge');
+
+const Challenge = require('./models/challenge');
 const fetch = require('node-fetch');
 const User = require('./models/User');
 const challengesRouter = require('./routes/challengesR');
@@ -17,6 +14,8 @@ const logout = require('./routes/logout');
 
 const UserControllers = require('./controllers/UserController');
 const UserRouter = require('./routes/userR');
+
+const authenticate = require('./middleware/authenticate');
 
 const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
@@ -67,7 +66,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   );
 
   // Route for the index page
-  app.get('/index', AuthRoutes, (req, res) => {
+  app.get('/index', Authenticate, (req, res) => {
     const indexFilePath = path.join(__dirname, 'public', 'index.html');
     res.sendFile(indexFilePath);
   });

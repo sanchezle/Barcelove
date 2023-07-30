@@ -3,7 +3,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-
+const path = require('path');
 const Challenge = require('./models/challenge');
 const fetch = require('node-fetch');
 const User = require('./models/User');
@@ -21,7 +21,7 @@ const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3005;
+const port = process.env.PORT || 3012;
 
 
 
@@ -35,29 +35,43 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   // Use the MongoDB connection from Mongoose in the session store
 
 
+
+
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use('/uploads', express.static('uploads'));
-  
-  app.use('/challenges', challengesRouter);
-  app.use('/auth', AuthRoutes);
-  app.use('/user', UserRouter);
-
-
-
-  //middleware  
+ 
  
 
-  // Route for the login page
+  // Route for serving the login.html page
   app.get('/login', (req, res) => {
     const loginFilePath = path.join(__dirname, 'public', 'login.html');
     res.sendFile(loginFilePath);
   });
 
+  // Route for serving the register.html page
+  app.get('/register', (req, res) => {
+    const registerFilePath = path.join(__dirname, 'public', 'register.html');
+    res.sendFile(registerFilePath);
+  });
+
+  
+  
+  app.use(authenticate);
+
+
+  app.use('/uploads', express.static('uploads'));
+  
+  app.use('/challenges', challengesRouter);
+  app.use('/auth', AuthRoutes);
+  app.use('/user', UserRouter);
+  app.use('/logout', logout);
+  
+  app.use(express.static('public'));
+
   app.use(
     session({
-      secret: 'your_secret_key',
+      secret: 'AzQ,PI)0(',
       resave: false,
       saveUninitialized: false,
       store: MongoStore, // Use the MongoStore instance directly
@@ -66,7 +80,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   );
 
   // Route for the index page
-  app.get('/index', Authenticate, (req, res) => {
+  app.get('/index', authenticate, (req, res) => {
     const indexFilePath = path.join(__dirname, 'public', 'index.html');
     res.sendFile(indexFilePath);
   });
@@ -83,7 +97,7 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
 
  
   // This middleware will serve static files from the 'public' directory
-  app.use(express.static('public'));
+  
 
 
   app.listen(port, () => console.log(`App listening at http://localhost:${port}`));

@@ -8,7 +8,7 @@ const passport = require('passport');
 const Challeng = require('../models/challenge');
 const fetch = require('node-fetch');
 
-const newChallenge = require('../helpers');
+const newChallenge = require('../middleware/helpers');
 
 router.post('/newChallenge', (req, res) => {
     const challengeName = req.body.challengeName;

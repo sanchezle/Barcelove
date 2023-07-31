@@ -10,6 +10,7 @@ const User = require('./models/User');
 const challengesRouter = require('./routes/challengesR');
 const AuthRoutes = require('./routes/auth');
 
+
 const logout = require('./routes/logout');
 
 const UserControllers = require('./controllers/UserController');
@@ -21,7 +22,7 @@ const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3012;
+const port = process.env.PORT || 3004;
 
 
 
@@ -35,39 +36,10 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   // Use the MongoDB connection from Mongoose in the session store
 
 
-
-
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
- 
- 
 
-  // Route for serving the login.html page
-  app.get('/login', (req, res) => {
-    const loginFilePath = path.join(__dirname, 'public', 'login.html');
-    res.sendFile(loginFilePath);
-  });
-
-  // Route for serving the register.html page
-  app.get('/register', (req, res) => {
-    const registerFilePath = path.join(__dirname, 'public', 'register.html');
-    res.sendFile(registerFilePath);
-  });
-
-  
-  
-  app.use(authenticate);
-
-
-  app.use('/uploads', express.static('uploads'));
-  
-  app.use('/challenges', challengesRouter);
-  app.use('/auth', AuthRoutes);
-  app.use('/user', UserRouter);
-  app.use('/logout', logout);
-  
-  app.use(express.static('public'));
 
   app.use(
     session({
@@ -78,12 +50,44 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
       cookie: { maxAge: 1000 * 60 * 60 * 24 }, // Set the session cookie options as needed
     })
   );
+ 
+ 
+  app.use('/auth', AuthRoutes);
+  app.use('/login', AuthRoutes);
+  app.use('/register', AuthRoutes);
+
+
+  // Route for serving the login.html page
+  app.get('/login', (req, res) => {
+    const loginFilePath = path.join(__dirname, 'public', 'login.html');
+    res.sendFile(loginFilePath);
+  });
+
+
+  app.get('/register', (req, res) => {
+    const loginFilePath = path.join(__dirname, 'public', 'register.html');
+    res.sendFile(loginFilePath);
+  });
+
+
+  app.use(authenticate);
+
+
+  app.use('/uploads', express.static('uploads'));
+  
+  app.use('/challenges', challengesRouter);
+  app.use('/user', UserRouter);
+  app.use('/logout', logout);
+  
+  app.use(express.static('public'));
+
 
   // Route for the index page
-  app.get('/index', authenticate, (req, res) => {
+  app.get('/index', (req, res) => {
     const indexFilePath = path.join(__dirname, 'public', 'index.html');
     res.sendFile(indexFilePath);
   });
+
 
   app.get('/profile', (req, res) => {
     res.sendFile(__dirname , 'public', '/profile.html');

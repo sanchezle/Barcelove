@@ -39,34 +39,34 @@ const login = (req, res, next) => {
 
     User.findOne({$or: [{email:username},{username:username}]})
     .then(user => {
-        if(user){
-            bcrypt.compare(password, user.password, function(err, result){
-                if(err){
-                    res.json({
-                        error:err
-                    })
-                    if (result){
-                        let token = jwt.sign({name: user.username}, 'AzQ,PI)0(', {expiresIn: '1h'})
-                        res.json({
-
-                            message: 'Login Successful!',
-                            token
-                        })
-
-                }else{
-                    res.json({
-                            message: 'Password does not match!'
-                        })
-                    }
-                }else{
-                        res.json({
-                            message: 'No user found!'
-                        })
-                }
+      if(user){
+          bcrypt.compare(password, User.password, function(err, result){
+              if(err){
+                  res.json({
+                      error: err
+                  })
+              }
+              if(result){
+                let token = jwt.sign({username: user.username}, 'verySecretValue' ,{expiresIn: '1h'})
+                res.json({
+                  message: 'Login Successful!',
+                  token
+                })
+              }else{
+                  res.json({
+                      message: 'Password does not matched!'
+                  })
+              }
             })
-        }
+      }else{
+          res.json({
+              message: 'No user found!:('
+          })
+      }
     })
 }
+      
+          
 
 
 

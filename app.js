@@ -22,15 +22,15 @@ const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 3014;
 
 
 
-mongoose.connect('mongodb://localhost:27017/Barcelove', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Database connected!');
+  mongoose.connect('mongodb://localhost:27017/Barcelove', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(() => {
+    console.log('Database connected!');
   // Start the server after successful database connection
 
   // Use the MongoDB connection from Mongoose in the session store
@@ -41,23 +41,10 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   app.use(bodyParser.json());
 
 
-  app.use(
-    session({
-      secret: 'AzQ,PI)0(',
-      resave: false,
-      saveUninitialized: false,
-      store: MongoStore, // Use the MongoStore instance directly
-      cookie: { maxAge: 1000 * 60 * 60 * 24 }, // Set the session cookie options as needed
-    })
-  );
  
- 
-  app.use('/auth', AuthRoutes);
-  app.use('/login', AuthRoutes);
-  app.use('/register', AuthRoutes);
 
 
-  // Route for serving the login.html page
+
   app.get('/login', (req, res) => {
     const loginFilePath = path.join(__dirname, 'public', 'login.html');
     res.sendFile(loginFilePath);
@@ -70,8 +57,9 @@ mongoose.connect('mongodb://localhost:27017/Barcelove', {
   });
 
 
+  app.use('/auth', AuthRoutes);
+  
   app.use(authenticate);
-
 
   app.use('/uploads', express.static('uploads'));
   

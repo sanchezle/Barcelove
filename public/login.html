@@ -5,9 +5,9 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="identifier">Email or Username:</label>
-        <input type="text" id="identifier" name="identifier" required>
+    <form action="/auth/login" method="POST" id="login-form">
+        <label for="Username">Email or Username:</label>
+        <input type="text" id="username" name="username" required>
         <br>
 
         <label for="password">Password:</label>
@@ -18,6 +18,6 @@
     </form>
    
     <a href="/register">Register</a>
-    
+    <script>src="main.js"</script>   
 </body>
 </html>

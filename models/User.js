@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema({
         ongoing: { type: [String], default: [] },
     },
     score: { type: Number, default: 0 },
+    
+    isVerified: {   // New field
+        type: Boolean,
+        default: false,
+    },
+
 },{timestamps: true});
 
 userSchema.pre('save', async function(next) {

@@ -39,6 +39,27 @@ const register = async (req, res, next ) => {
     // Save the user
     user.save()
     .then(user => {
+
+        // Create a confirmation token.
+        const token = jwt.sign({ _id: user._id }, process.env.CEMAIL_TOKEN_SECRET, { expiresIn: '1d' });
+
+        // Send confirmation email.
+        const mailOptions = {
+            from: 'barcelove01@gmail.com',
+            to: user.email,
+            subject: 'Account Verification Token',
+            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/confirmation\/' + token + '\n'
+        };
+
+        sgMail
+        .send(mailOptions)
+        .then(() => {
+            console.log('Email sent')
+        })
+        .catch((error) => {
+            console.error(error)
+        });
+
         res.json({
             message: 'User Added Successfully!'
         })
@@ -94,26 +115,24 @@ const login = async (req, res, next) => {
 
 
 const confirmEmail = (req, res) => {
-    try {
-        const emailToken = req.params.token;
-        const payload = jwt.verify(emailToken, 'secret'); // verify token
+    const token = req.params.token;
+    
+    // Verify the token
+    jwt.verify(token, process.env.TOKEN_SECRET, function(err, decodedToken) {
+        if (err) {
+            return res.status(400).json({message: 'The token is invalid or has expired.'});
+        }
+        const userId = decodedToken._id;
 
-        // find user by id and set emailConfirmed to true
-        User.findByIdAndUpdate(payload.id, { emailConfirmed: true }, (err, result) => {
-            if (err) {
-                res.status(500).json({ error: 'Error confirming email' });
-            } else {
-                res.json({
-                    message: 'Email confirmed successfully'
-                })
-            }
-        });
-    } catch (e) {
-        res.status(400).json({ error: 'Invalid token' });
-    }
-}
+        // Update user's isVerified field to true
+        User.findOneAndUpdate({_id: userId}, { isVerified: true })
+        .then(() => res.json({message: 'Your account has been successfully verified!'}))
+        .catch((err) => res.json({message: 'An error occured during verification'}));
+    });
+};
 
-module.exports = { register, login, confirmEmail }; // add confirmEmail
+
+module.exports = { register, login, confirmEmail};
 
           
 

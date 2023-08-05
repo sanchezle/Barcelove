@@ -9,14 +9,26 @@ require('dotenv').config();
 
 sgMail.setApiKey(process.env);
 
+const register = async (req, res, next ) => {
+    let password = req.body.password;
+    let passwordConfirm = req.body.passwordConfirm;
 
-const register = (req, res, next ) => {
+    // Check if passwords match
+    if(password !== passwordConfirm){
+        return res.json({
+            message: 'Passwords do not match!'
+        });
+    }
+    
+    // Create the user
     let user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password, // Password will be hashed in pre-save middleware
+        password: password, // Password will be hashed in pre-save middleware
         username: req.body.username,
     })
+
+    // Save the user
     user.save()
     .then(user => {
         res.json({
@@ -24,9 +36,10 @@ const register = (req, res, next ) => {
         })
     })
     .catch(error => {
-        res.json({
-            message: 'An error occured!'
+        res.status(500).json({
+            message: 'An error occurred!'
         })
+        console.error(error);
     })
 }
 

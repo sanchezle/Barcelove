@@ -13,6 +13,14 @@ const register = async (req, res, next ) => {
     let password = req.body.password;
     let passwordConfirm = req.body.passwordConfirm;
 
+        // Password Strength Validation
+    let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        return res.json({
+            message: 'Password should have at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character'
+        });
+    }
+
     // Check if passwords match
     if(password !== passwordConfirm){
         return res.json({

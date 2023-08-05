@@ -7,7 +7,7 @@ const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 
 
-sgMail.setApiKey(process.env);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const register = async (req, res, next ) => {
     let password = req.body.password;

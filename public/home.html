@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index Page</title>
+    <link rel="stylesheet" href="styles.css">
+  
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    <div class="container" id="container">
+        <h1 id="title" >   B A R C E L O V E &#x2764</h1>
+        
+        <div>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a> 
+            <button id="logout-button">Logout</button>
+            <a href="profile.html">Profile</a>
+        </div>
+    </div>
+    <script>
+        const logoutButton = document.getElementById('logout-button');
+
+        logoutButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logout');
+                if (response.ok) {
+                    window.location.href = '/login'; // Redirect to login page after successful logout
+                } else {
+                    console.error('Logout failed');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

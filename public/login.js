@@ -1,4 +1,3 @@
-// Example client-side code (assuming you have an HTML form with id="login-form")
 const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', async (event) => {
@@ -18,10 +17,25 @@ loginForm.addEventListener('submit', async (event) => {
     // Save the token in local storage or cookie (client-side storage)
     localStorage.setItem('jwtToken', token);
 
-    // Redirect to /index page after successful login
-    window.location.href = '/index';
+    // Redirect to the page specified in the server's response
+    window.location.href = response.data.redirectTo;
   } catch (error) {
     // Handle login error, e.g., show an error message on the login form
     console.error(error);
   }
+});
+
+const logoutButton = document.getElementById('logout-button');
+
+logoutButton.addEventListener('click', async () => {
+    try {
+        const response = await fetch('/logout');
+        if (response.ok) {
+            window.location.href = '/login'; // Redirect to login page after successful logout
+        } else {
+            console.error('Logout failed');
+        }
+    } catch (error) {
+        console.error('Error during logout:', error);
+    }
 });

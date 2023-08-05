@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
+require('dotenv').config();
 
 
 const authenticate = (req, res, next) => {
@@ -13,7 +14,7 @@ const authenticate = (req, res, next) => {
 
   // If JWT token exists, verify it
   if (token) {
-    jwt.verify(token, 'AzQ,PI)0(', (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         // Invalid or expired token
         return res.status(401).json({ message: 'Invalid or expired token.' });
@@ -26,16 +27,14 @@ const authenticate = (req, res, next) => {
   } else {
     // If there's no JWT token, check for session-based authentication
     if (req.session && req.session.isAuthenticated) {
-      // User is authenticated, proceed to the next middleware/route handler
+      if (req.originalUrl === '/login' || req.originalUrl === '/') {
+        return res.redirect('/home');
+      }
       next();
     } else {
-      // User is not authenticated, redirect to the login page if the requested URL is not already /login
       if (req.originalUrl !== '/login') {
         return res.redirect('/login');
       }
-
-      // If the requested URL is /login and the user is not authenticated,
-      // proceed to the next middleware/route handler to serve the login page
       next();
     }
   }

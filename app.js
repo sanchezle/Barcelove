@@ -9,7 +9,7 @@ const fetch = require('node-fetch');
 const User = require('./models/User');
 const challengesRouter = require('./routes/challengesR');
 const AuthRoutes = require('./routes/auth');
-
+const dotenv = require('dotenv');
 
 const logout = require('./routes/logout');
 
@@ -22,8 +22,9 @@ const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3014;
+const port = process.env.PORT || 3040;
 
+require('dotenv').config();
 
 
   mongoose.connect('mongodb://localhost:27017/Barcelove', {
@@ -35,15 +36,19 @@ const port = process.env.PORT || 3014;
 
   // Use the MongoDB connection from Mongoose in the session store
 
+  app.use(session({
+    secret: 'fuckingshit0408',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore,
+    cookie: { maxAge: 60000 * 30 } // Session expires after 30 minutes
+  }));
+  
 
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-
-
- 
-
-
+  
 
   app.get('/login', (req, res) => {
     const loginFilePath = path.join(__dirname, 'public', 'login.html');
@@ -55,46 +60,54 @@ const port = process.env.PORT || 3014;
     const loginFilePath = path.join(__dirname, 'public', 'register.html');
     res.sendFile(loginFilePath);
   });
+  
 
+  app.use(express.static(path.join(__dirname, 'public')));
+  
 
   app.use('/auth', AuthRoutes);
-  
-  app.use(authenticate);
 
-  app.use('/uploads', express.static('uploads'));
-  
-  app.use('/challenges', challengesRouter);
-  app.use('/user', UserRouter);
-  app.use('/logout', logout);
-  
-  app.use(express.static('public'));
+    
+  const privateRouter = express.Router();
 
-
-  // Route for the index page
-  app.get('/index', (req, res) => {
-    const indexFilePath = path.join(__dirname, 'public', 'index.html');
-    res.sendFile(indexFilePath);
+  privateRouter.use(authenticate);
+  privateRouter.get('/home', (req, res) => {
+      const indexFilePath = path.join(__dirname, 'public', 'home.html');
+      res.sendFile(indexFilePath);
   });
 
+    //profile router
+    privateRouter.get('/profile', (req, res) => {
+      const indexFilePath = path.join(__dirname, 'public', 'profile.html');
+    });
+    privateRouter.get('/chalenges',  (req, res) => {
+      const indexFilePath = path.join(__dirname, 'public', 'chalenges.html');
+    });
+    
+    privateRouter.get('/user', (req, res) => {
+      const indexFilePath = path.join(__dirname, 'public', 'user.html');
+    });
+    privateRouter.get('/logout', (req, res) => {
+        req.session.destroy(function(err) {
+          if(err) {
+              console.log(err);
+              res.status(500).json({ message: 'Error logging out. Please try again.' });
+          } else {
+              res.status(200).json({ message: 'Logged out successfully' });
+          }
+      });
+      
+    });
 
-  app.get('/profile', (req, res) => {
-    res.sendFile(__dirname , 'public', '/profile.html');
-  });
-  
+  app.use('/', privateRouter);
 
 
-  //logout
-  app.use('/logout', logout);
   
 
  
-  // This middleware will serve static files from the 'public' directory
-  
+
 
 
   app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 }).catch(err => console.log(err));
 
-
-app.use('/api/user', UserRouter);
-app.use('/api', AuthRoutes);

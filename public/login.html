@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <title>Login</title>
 </head>
 <body>
     <h1>Login</h1>
-    <form action="/auth/login" method="POST" id="login-form">
+    <form id="login-form" method="POST">
         <label for="Username">Email or Username:</label>
         <input type="text" id="username" name="username" required>
         <br>
-
+      
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         <br>
-
+      
         <input type="submit" value="Login">
-    </form>
-   
+      </form>
+      
     <a href="/register">Register</a>
-    <script>src="main.js"</script>   
+    <script src="/login.js"></script>
+  
 </body>
 </html>

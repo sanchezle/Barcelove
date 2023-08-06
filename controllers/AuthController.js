@@ -4,7 +4,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
+const crypto = require('crypto');
+
 require('dotenv').config();
+
 
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -131,8 +134,63 @@ const confirmEmail = (req, res) => {
     });
 };
 
+const passwordResetRequest = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+  
+    if (!user) {
+      return res.status(400).send('No account with that email found');
+    }
+  
+    const token = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+  
+    const msg = {
+      to: email,
+      from: process.env.FROM_EMAIL,
+      subject: 'Password Reset',
+      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+             Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
+             http://${req.headers.host}/auth/reset-password/${token}\n\n
+             If you did not request this, please ignore this email and your password will remain unchanged.\n`
+    };
+  
+    sgMail.send(msg);
+  
+    res.send('Password reset email has been sent');
+  };
 
-module.exports = { register, login, confirmEmail};
+
+  const resetPassword = async (req, res) => {
+    const { token, password, confirmPassword } = req.body;
+  
+    if (password !== confirmPassword) {
+      return res.status(400).send('Passwords do not match');
+    }
+  
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+  
+    if (!user) {
+      return res.status(400).send('Password reset token is invalid or has expired');
+    }
+  
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+  
+    res.send('Password has been updated');
+  };
+  
+
+
+module.exports = { register, login, confirmEmail, passwordResetRequest, resetPassword};
 
           
 

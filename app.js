@@ -22,7 +22,7 @@ const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
 
 const app = express();
-const port = process.env.PORT || 3044;
+const port = process.env.PORT || 3050;
 
 require('dotenv').config();
 
@@ -37,7 +37,7 @@ require('dotenv').config();
   // Use the MongoDB connection from Mongoose in the session store
 
   app.use(session({
-    secret: 'fuckingshit0408',
+    secret: process.env.SECRET_SESSION_TOKEN,
     resave: false,
     saveUninitialized: true,
     store: MongoStore,
@@ -57,9 +57,21 @@ require('dotenv').config();
 
 
   app.get('/register', (req, res) => {
-    const loginFilePath = path.join(__dirname, 'public', 'register.html');
-    res.sendFile(loginFilePath);
+    const registerFilePath = path.join(__dirname, 'public', 'register.html');
+    res.sendFile(registerFilePath);
   });
+
+  app.get('/password-reset-request', (req, res) => {
+    const requestPasswordFilePath = path.join(__dirname, 'public', 'resetpassword.html');
+    res.sendFile(requestPasswordFilePath);
+  });
+
+  app.get('/auth/reset-password', (req, res) => {
+    const restePassword = (path.join(__dirname, 'public' + 'reset-password.html'));
+    res.sendFile(restePassword);
+  });
+
+
   
 
   app.use(express.static(path.join(__dirname, 'public')));
@@ -109,5 +121,6 @@ require('dotenv').config();
 
 
   app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+
 }).catch(err => console.log(err));
 

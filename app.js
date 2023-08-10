@@ -66,13 +66,11 @@ require('dotenv').config();
     res.sendFile(requestPasswordFilePath);
   });
 
-  app.get('/auth/reset-password', (req, res) => {
-    const restePassword = (path.join(__dirname, 'public' + 'reset-password.html'));
+  app.get('/auth/reset-password/:token', (req, res) => {
+    const restePassword = (path.join(__dirname, 'public','reset-password.html'));
     res.sendFile(restePassword);
   });
 
-
-  
 
   app.use(express.static(path.join(__dirname, 'public')));
   

@@ -14,19 +14,21 @@ const userSchema = new mongoose.Schema({
     wallet: {
         balance: { type: Number, default: 0 },
         currency: { type: String, default: 'USD' },
-    },    userQR: { type: String, default: '' },
+    },
+    userQR: { type: String, default: '' },
     challenges: {
         completed: { type: [String], default: [] },
         ongoing: { type: [String], default: [] },
     },
     score: { type: Number, default: 0 },
+    isVerified: { type: Boolean, default: false },
     
-    isVerified: {   // New field
-        type: Boolean,
-        default: false,
-    },
+    // Added fields for password reset
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
 
-},{timestamps: true});
+}, { timestamps: true });
+
 
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {

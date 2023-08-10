@@ -9,6 +9,9 @@ require('dotenv').config();
 
 
 const authenticate = (req, res, next) => {
+  if (req.path.startsWith('/auth/reset-password')) {
+    return next(); // Skip the session check for reset password routes.
+}
   // Check for JWT token in the request headers
   const token = req.header('Authorization');
 

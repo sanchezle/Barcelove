@@ -84,41 +84,38 @@ const login = async (req, res, next) => {
         var user = await User.findOne({$or: [{email:username},{username:username}]});
         
         if(user) {
-            console.log('password:', password);
-            console.log('user.password:', user.password);
-
             // Check if user is verified
             if (!user.isVerified) {
-                return res.json({
+                return res.status(401).json({
                     message: 'Please verify your email before logging in.'
                 });
             }
 
             let result = await bcrypt.compare(password, user.password);
             if(result) {
-                let token = jwt.sign({username: user.username}, process.env.JWT_SECRET,{expiresIn: '1h'})
+                let token = jwt.sign({username: user.username}, process.env.JWT_SECRET, {expiresIn: '1h'});
                 
                 // Set session isAuthenticated as true
                 req.session.isAuthenticated = true;
                 
-                res.json({
+                return res.json({
                     message: 'Login Successful!',
-                    token,
-                    redirectTo: '/home' // Add the route you want to redirect to
+                    token: token,
+                    redirectTo: '/home' // The route you want the client to redirect to
                 });
              
             } else {
-                res.json({
-                    message: 'Password does not match!'
+                return res.status(401).json({
+                    message: 'Invalid credentials!'
                 });
             }
         } else {
-            res.json({
-                message: 'No user found!'
+            return res.status(401).json({
+                message: 'Invalid credentials!'
             });
         }
     } catch(error) {
-        res.json({
+        return res.status(500).json({
             message: 'An error occurred during login!',
             error: error.message 
         });

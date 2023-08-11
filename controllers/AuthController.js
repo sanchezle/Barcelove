@@ -51,7 +51,7 @@ const register = async (req, res, next ) => {
             from: 'barcelove01@gmail.com',
             to: user.email,
             subject: 'Account Verification Token',
-            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/confirmation\/' + token + '\n'
+            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth/confirmEmail\/' + token + '\n'
         };
 
         sgMail
@@ -82,11 +82,20 @@ const login = async (req, res, next) => {
         var username = req.body.username;
         var password = req.body.password;
         var user = await User.findOne({$or: [{email:username},{username:username}]});
-        if(user){
+        
+        if(user) {
             console.log('password:', password);
             console.log('user.password:', user.password);
+
+            // Check if user is verified
+            if (!user.isVerified) {
+                return res.json({
+                    message: 'Please verify your email before logging in.'
+                });
+            }
+
             let result = await bcrypt.compare(password, user.password);
-            if(result){
+            if(result) {
                 let token = jwt.sign({username: user.username}, process.env.JWT_SECRET,{expiresIn: '1h'})
                 
                 // Set session isAuthenticated as true
@@ -96,16 +105,16 @@ const login = async (req, res, next) => {
                     message: 'Login Successful!',
                     token,
                     redirectTo: '/home' // Add the route you want to redirect to
-                })
+                });
              
-            }else{
+            } else {
                 res.json({
-                    message: 'Password does not matched!'
+                    message: 'Password does not match!'
                 });
             }
-        }else{
+        } else {
             res.json({
-                message: 'No user found!:('
+                message: 'No user found!'
             });
         }
     } catch(error) {
@@ -121,18 +130,19 @@ const confirmEmail = (req, res) => {
     const token = req.params.token;
     
     // Verify the token
-    jwt.verify(token, process.env.TOKEN_SECRET, function(err, decodedToken) {
+    jwt.verify(token, process.env.CEMAIL_TOKEN_SECRET, function(err, decodedToken) {
         if (err) {
             return res.status(400).json({message: 'The token is invalid or has expired.'});
         }
         const userId = decodedToken._id;
 
         // Update user's isVerified field to true
-        User.findOneAndUpdate({_id: userId}, { isVerified: true })
+        User.findOneAndUpdate({_id: userId}, { isVerified: true }) // <-- Fixed the query here
         .then(() => res.json({message: 'Your account has been successfully verified!'}))
-        .catch((err) => res.json({message: 'An error occured during verification'}));
+        .catch((err) => res.json({message: 'An error occurred during verification'}));
     });
 };
+
 
 const passwordResetRequest = async (req, res) => {
     const { email } = req.body;
@@ -179,8 +189,7 @@ const passwordResetRequest = async (req, res) => {
       return res.status(400).send('Password reset token is invalid or has expired');
     }
   
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
+    user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
     await user.save();

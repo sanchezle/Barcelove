@@ -25,17 +25,3 @@ loginForm.addEventListener('submit', async (event) => {
   }
 });
 
-const logoutButton = document.getElementById('logout-button');
-
-logoutButton.addEventListener('click', async () => {
-    try {
-        const response = await fetch('/logout');
-        if (response.ok) {
-            window.location.href = '/login'; // Redirect to login page after successful logout
-        } else {
-            console.error('Logout failed');
-        }
-    } catch (error) {
-        console.error('Error during logout:', error);
-    }
-});

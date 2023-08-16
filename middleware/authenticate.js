@@ -4,7 +4,7 @@ const MongoStoreFactory = require('connect-mongo')
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const MongoStore = MongoStoreFactory.create({ mongoUrl: process.env.MONGO_URI });
+const MongoStore = MongoStoreFactory.create({ mongoUrl: process.env.MONGODB_URI });
 
 
 const authenticate = (req, res, next) => {

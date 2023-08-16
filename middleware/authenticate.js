@@ -2,10 +2,9 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const MongoStoreFactory = require('connect-mongo')
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const MongoStore = MongoStoreFactory.create({ mongoUrl: process.env.MONGO_URI });
-
-require('dotenv').config();
 
 
 const authenticate = (req, res, next) => {

@@ -42,14 +42,27 @@ function encodeMongoURI(uri) {
 // Access the MONGODB_URI environment variable here
 const encodedMongoURI = encodeMongoURI(process.env.MONGODB_URI);
 
+
+
+const MongoStoreFactory = require('connect-mongo');
+const MongoStore = MongoStoreFactory.create({ mongoUrl: encodedMongoURI });
+
 // Now use the encoded URI in your Mongoose and MongoStoreFactory calls
 mongoose.connect(encodedMongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
+}).then(() => {
+  console.log('Connected to database');
 
-const MongoStoreFactory = require('connect-mongo');
-const MongoStore = MongoStoreFactory.create({ mongoUrl: encodedMongoURI });
+  app.use(session({
+    secret: process.env.SECRET_SESSION_TOKEN,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore,
+    cookie: { maxAge: 60000 * 30 } // Session expires after 30 minutes
+  }));
+  
+
 
 
 
@@ -62,14 +75,7 @@ const MongoStore = MongoStoreFactory.create({ mongoUrl: encodedMongoURI });
 
   // Use the MongoDB connection from Mongoose in the session store
 
-  app.use(session({
-    secret: process.env.SECRET_SESSION_TOKEN,
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore,
-    cookie: { maxAge: 60000 * 30 } // Session expires after 30 minutes
-  }));
-  
+
 
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));

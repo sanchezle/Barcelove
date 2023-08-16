@@ -26,6 +26,8 @@ require('dotenv').config();
 
 const url = require('url');
 
+const MONGODB_URI = process.env.MONGODB_URI;
+
 function encodeMongoURI(uri) {
   const parsedUri = url.parse(uri, true);  // Parse the URI and its query parameters
   delete parsedUri.search;  // The search property is derived from the query and needs to be deleted for formatting.
@@ -40,13 +42,15 @@ function encodeMongoURI(uri) {
 }
 
 // Access the MONGODB_URI environment variable here
-const encodedMongoURI = encodeMongoURI(process.env.MONGODB_URI);
+const encodedMongoURI = encodeMongoURI(MONGODB_URI);
 
 
 
 const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: encodedMongoURI });
 
+console.log(encodedMongoURI);
+console.log(MONGODB_URI);
 // Now use the encoded URI in your Mongoose and MongoStoreFactory calls
 mongoose.connect(encodedMongoURI, {
     useNewUrlParser: true,
@@ -71,9 +75,6 @@ mongoose.connect(encodedMongoURI, {
 
 
 
-  // Start the server after successful database connection
-
-  // Use the MongoDB connection from Mongoose in the session store
 
 
 

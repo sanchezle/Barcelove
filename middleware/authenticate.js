@@ -3,7 +3,7 @@ const session = require('express-session');
 const MongoStoreFactory = require('connect-mongo')
 const mongoose = require('mongoose');
 
-const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
+const MongoStore = MongoStoreFactory.create({ mongoUrl: process.env.MONGO_URI });
 
 require('dotenv').config();
 

@@ -18,20 +18,46 @@ const UserRouter = require('./routes/userR');
 
 const authenticate = require('./middleware/authenticate');
 
-const MongoStoreFactory = require('connect-mongo');
-const MongoStore = MongoStoreFactory.create({ mongoUrl: process.env.MONGODB_URI });
-
 const app = express();
 const port = process.env.PORT || 3000;
-
 require('dotenv').config();
 
 
-  mongoose.connect(process.env.MONGODB_URI, {
+
+const url = require('url');
+
+function encodeMongoURI(uri) {
+  const parsedUri = url.parse(uri, true);  // Parse the URI and its query parameters
+  delete parsedUri.search;  // The search property is derived from the query and needs to be deleted for formatting.
+
+  // URL-encode each query parameter
+  for (let key in parsedUri.query) {
+    parsedUri.query[key] = encodeURIComponent(parsedUri.query[key]);
+  }
+
+  // Reformat the URI with the encoded query parameters
+  return url.format(parsedUri);
+}
+
+// Access the MONGODB_URI environment variable here
+const encodedMongoURI = encodeMongoURI(process.env.MONGODB_URI);
+
+// Now use the encoded URI in your Mongoose and MongoStoreFactory calls
+mongoose.connect(encodedMongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  }).then(() => {
-    console.log('Database connected!');
+});
+
+const MongoStoreFactory = require('connect-mongo');
+const MongoStore = MongoStoreFactory.create({ mongoUrl: encodedMongoURI });
+
+
+
+
+
+
+
+
   // Start the server after successful database connection
 
   // Use the MongoDB connection from Mongoose in the session store

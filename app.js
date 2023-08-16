@@ -19,7 +19,7 @@ const UserRouter = require('./routes/userR');
 const authenticate = require('./middleware/authenticate');
 
 const MongoStoreFactory = require('connect-mongo');
-const MongoStore = MongoStoreFactory.create({ mongoUrl: 'mongodb://localhost:27017/Barcelove' });
+const MongoStore = MongoStoreFactory.create({ mongoUrl: process.env.MONGODB_URI });
 
 const app = express();
 const port = process.env.PORT || 3000;

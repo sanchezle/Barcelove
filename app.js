@@ -49,8 +49,7 @@ const encodedMongoURI = encodeMongoURI(MONGODB_URI);
 const MongoStoreFactory = require('connect-mongo');
 const MongoStore = MongoStoreFactory.create({ mongoUrl: encodedMongoURI });
 
-console.log(encodedMongoURI);
-console.log(MONGODB_URI);
+
 // Now use the encoded URI in your Mongoose and MongoStoreFactory calls
 mongoose.connect(encodedMongoURI, {
     useNewUrlParser: true,

@@ -120,7 +120,7 @@ mongoose.connect(encodedMongoURI, {
 
     //profile router
     privateRouter.get('/profile', (req, res) => {
-      const indexFilePath = path.join(__dirname, 'public', 'profile.html');
+      const profileFilePath = path.join(__dirname, 'public', 'profile.html');
     });
     privateRouter.get('/chalenges',  (req, res) => {
       const indexFilePath = path.join(__dirname, 'public', 'chalenges.html');

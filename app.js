@@ -105,6 +105,9 @@ mongoose.connect(encodedMongoURI, {
 
 
   app.use(express.static(path.join(__dirname, 'public')));
+
+  app.use('/dist', express.static(path.join(__dirname, 'dist')));
+
   
 
   app.use('/auth', AuthRoutes);

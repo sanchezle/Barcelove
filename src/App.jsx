@@ -1,14 +1,16 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import UserRouter from './UserRouter';  // Assuming UserRouter.js is in the same directory
 
-
-
-const App = () => (
-  <div>
-    <h1>Hello, React!</h1>
-    <div>
-      <user/>
-    </div>
-  </div>
-);
+const App = () => {
+  return (
+    <Router>
+      <Switch>
+        {/* other routes */}
+        <Route path="/user" component={UserRouter} />
+      </Switch>
+    </Router>
+  );
+};
 
 export default App;

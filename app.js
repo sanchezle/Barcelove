@@ -10,7 +10,6 @@ const User = require('./models/User');
 const challengesRouter = require('./routes/challengesR');
 const AuthRoutes = require('./routes/auth');
 const dotenv = require('dotenv');
-const userRoutes = require('./routes/userRoutes'); // Path to your userRoutes file
 const logout = require('./routes/logout');
 
 const UserControllers = require('./controllers/UserController');
@@ -80,7 +79,7 @@ mongoose.connect(encodedMongoURI, {
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use(userRoutes);
+
   
 
   app.get('/login', (req, res) => {

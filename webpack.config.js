@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development', // or 'production'
-  entry: './src/index.jsx', // Entry point to your application
+  entry: './src/Index.jsx', // Entry point to your application
   output: {
     path: path.resolve(__dirname, 'dist'), // Output directory
     filename: 'main.js' // Output file

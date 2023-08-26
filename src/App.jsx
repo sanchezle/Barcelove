@@ -7,7 +7,7 @@ const App = () => {
     <Router>
       <Switch>
         {/* other routes */}
-        <Route path="/user" component={UserRouter} />
+        <Route path="/profile" component={UserRouter} />
       </Switch>
     </Router>
   );

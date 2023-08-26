@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import UserRouter from './UserRouter';  // Assuming UserRouter.js is in the same directory
+import UserRouter from './userRoute';  // Assuming UserRouter.js is in the same directory
 
 const App = () => {
   return (

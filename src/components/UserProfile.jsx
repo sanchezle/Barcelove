@@ -1,60 +1,27 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+// Inside your App.jsx or Profile component file
+import React, { useEffect, useState } from 'react';
 
-const UserProfile = ({ user }) => {
-  const [formData, setFormData] = useState({
-    name: user.profile.name,
-    description: user.profile.description,
-    picture: user.profile.picture || 'defaultAvatar1.jpg'
-  });
+function Profile() {
+  const [userData, setUserData] = useState(null);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  useEffect(() => {
+    fetch('/api/user')  // replace with your actual API endpoint
+      .then(response => response.json())
+      .then(data => setUserData(data))
+      .catch(error => console.error('There was an error fetching user data:', error));
+  }, []); // The empty dependency array ensures this runs once when the component mounts
 
-  const handleSubmit = async (field) => {
-    try {
-      const response = await axios.put(`/api/user/${user._id}/update`, {
-        [field]: formData[field],
-      });
-      if (response.status === 200) {
-        alert("Update successful");
-      } else {
-        alert("Update failed");
-      }
-    } catch (error) {
-      console.error("There was an error updating the user", error);
-    }
-  };
+  if (!userData) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>
-      <h1>{formData.name}</h1>
-      <img src={formData.picture} alt="User Avatar" />
-      <p>{formData.description}</p>
-      
-      {/* Update Name */}
-      <form onSubmit={(e) => { e.preventDefault(); handleSubmit('name'); }}>
-        <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
-        <button type="submit">Update Name</button>
-      </form>
-      
-      {/* Update Description */}
-      <form onSubmit={(e) => { e.preventDefault(); handleSubmit('description'); }}>
-        <input type="text" name="description" value={formData.description} onChange={handleInputChange} />
-        <button type="submit">Update Description</button>
-      </form>
-      
-      {/* Update Picture */}
-      <form onSubmit={(e) => { e.preventDefault(); handleSubmit('picture'); }}>
-        <input type="text" name="picture" value={formData.picture} onChange={handleInputChange} />
-        <button type="submit">Update Picture</button>
-      </form>
+      <h1>{userData.username}</h1>
+      <img src={userData.profile.picture} alt="Profile" />
+      <p>{userData.profile.description}</p>
     </div>
   );
-};
+}
 
-export default UserProfile;
-
-
+export default Profile;

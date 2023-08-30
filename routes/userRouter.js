@@ -1,25 +1,26 @@
 const express = require('express');
-const User = require('./models/User'); // Path to your User model
 const router = express.Router();
+const User = require('../models/User');  // Adjust the path to where your User model resides
 
-router.put('/api/user/:id/update', async (req, res) => {
-  const { id } = req.params;
-  const { name, description, picture } = req.body;
-
+router.get('/api/userProfile', async (req, res) => {
   try {
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    if (name) user.profile.name = name;
-    if (description) user.profile.description = description;
-    if (picture) user.profile.picture = picture;
+    // Replace req.userId with the actual logic to get user's ID. 
+    // This could be from the request, a decoded JWT token, etc.
+    const user = await User.findById(req.userId);
 
-    await user.save();
-    res.status(200).send(user);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const { username, profile } = user;
+
+    res.json({
+      username,
+      picture: profile.picture,
+      description: profile.description,
+    });
   } catch (error) {
-    console.error("There was an error updating the user", error);
-    res.status(500).send("There was an error updating the user");
+    res.status(500).json({ error: 'Something went wrong' });
   }
 });
 

@@ -1,24 +1,15 @@
+
 import React from 'react';
+import Profile from './components/UserProfile';
 
-import User from '../models/UserWrapper';
-
-var username = User.getUsername();
-
-function Profile() {
+function App() {
   return (
-    <>
-      <h1>{username}</h1>
-      <img
-        className="avatar"
-        src={user.imageUrl}
-        alt={'Photo of ' + user.name}
-        style={{
-          width: user.imageSize,
-          height: user.imageSize
-        }}
-      />
-    </>
+    <div>
+      <h1>Hello, world!</h1>
+      <Profile />
+    </div>
   );
 }
 
-export default Profile;
+export default App;
+

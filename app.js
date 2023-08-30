@@ -11,6 +11,7 @@ const challengesRouter = require('./routes/challengesR');
 const AuthRoutes = require('./routes/auth');
 const dotenv = require('dotenv');
 const logout = require('./routes/logout');
+const userRouter = require('./routes/userRouter');
 
 const UserControllers = require('./controllers/UserController');
 
@@ -132,8 +133,8 @@ mongoose.connect(encodedMongoURI, {
     
     });
     
-    privateRouter.get('/user', (req, res) => {
-      const indexFilePath = path.join(__dirname, 'public', 'user.html');
+    privateRouter.get('/user', userRouter,(req, res) => {
+      const profileFilePath = path.join(__dirname, 'public', 'profile.html');
     });
     privateRouter.get('/logout', (req, res) => {
         req.session.destroy(function(err) {

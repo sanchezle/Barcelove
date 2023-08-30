@@ -1,11 +1,13 @@
 import React from 'react';
 
+import User from '../models/UserWrapper';
 
+var username = User.getUsername();
 
 function Profile() {
   return (
     <>
-      <h1>{user.name}</h1>
+      <h1>{username}</h1>
       <img
         className="avatar"
         src={user.imageUrl}

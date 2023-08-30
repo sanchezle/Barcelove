@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');  // Adjust the path to where your User model resides
 
-router.get('/api/userProfile', async (req, res) => {
+router.get('/api/Profile', async (req, res) => {
   try {
     // Replace req.userId with the actual logic to get user's ID. 
     // This could be from the request, a decoded JWT token, etc.

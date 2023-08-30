@@ -133,9 +133,8 @@ mongoose.connect(encodedMongoURI, {
     
     });
     
-    privateRouter.get('/user', userRouter,(req, res) => {
-      const profileFilePath = path.join(__dirname, 'public', 'profile.html');
-    });
+    privateRouter.use('/api', userRouter);
+
     privateRouter.get('/logout', (req, res) => {
         req.session.destroy(function(err) {
           if(err) {

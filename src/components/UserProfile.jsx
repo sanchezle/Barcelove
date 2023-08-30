@@ -5,7 +5,7 @@ function Profile() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    fetch('/api/user')  // replace with your actual API endpoint
+    fetch('/api/profile')  // replace with your actual API endpoint
       .then(response => response.json())
       .then(data => setUserData(data))
       .catch(error => console.error('There was an error fetching user data:', error));

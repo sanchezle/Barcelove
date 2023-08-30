@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');  // Adjust the path to where your User model resides
 
-router.get('/api/Profile', async (req, res) => {
+router.get('/api/profile', async (req, res) => {  // Lowercased 'profile' for consistency
   try {
     // Replace req.userId with the actual logic to get user's ID. 
     // This could be from the request, a decoded JWT token, etc.
@@ -20,7 +20,8 @@ router.get('/api/Profile', async (req, res) => {
       description: profile.description,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error(error);  // Log the error for debugging
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

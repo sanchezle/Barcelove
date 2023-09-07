@@ -76,8 +76,7 @@ mongoose.connect(encodedMongoURI, {
     next();
   };
   
-  router.use(logSession);  // Add this before other route definitions
-  
+  app.use(logSession);
 
 
 

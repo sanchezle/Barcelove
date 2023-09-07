@@ -1,28 +1,28 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');  // Adjust the path to where your User model resides
-
-router.get('/api/profile', async (req, res) => {  // Lowercased 'profile' for consistency
+router.get('/api/profile', async (req, res) => {
   try {
-    // Replace req.userId with the actual logic to get user's ID. 
-    // This could be from the request, a decoded JWT token, etc.
-    const user = await User.findById(req.userId);
+    console.log('Received request for /api/profile');
+    
+    // Simulate where userId might come from. Replace with your actual logic.
+    const userId = req.userId || 'some-hardcoded-userId';
+    console.log(`Looking for user with ID: ${userId}`);
+    
+    const user = await User.findById(userId);
 
     if (!user) {
+      console.log('User not found');
       return res.status(404).json({ error: 'User not found' });
     }
 
     const { username, profile } = user;
-
+    
+    console.log('Sending user data back to client');
     res.json({
       username,
       picture: profile.picture,
       description: profile.description,
     });
   } catch (error) {
-    console.error(error);  // Log the error for debugging
+    console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-module.exports = router;

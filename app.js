@@ -16,7 +16,10 @@ const userRouter = require('./routes/userRouter');
 const UserControllers = require('./controllers/UserController');
 
 
+
 const authenticate = require('./middleware/authenticate');
+
+const router = express.Router();
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -68,7 +68,13 @@ mongoose.connect(encodedMongoURI, {
 
 
 
-
+  const logSession = (req, res, next) => {
+    console.log('Session data:', req.session);
+    next();
+  };
+  
+  router.use(logSession);  // Add this before other route definitions
+  
 
 
 

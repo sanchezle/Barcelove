@@ -96,6 +96,7 @@ const login = async (req, res, next) => {
                 let token = jwt.sign({username: user.username}, process.env.JWT_SECRET, {expiresIn: '1h'});
                 
                 // Set session isAuthenticated as true
+                req.session.userId = user._id;
                 req.session.isAuthenticated = true;
                 
                 return res.json({

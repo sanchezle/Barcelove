@@ -1,7 +1,7 @@
 // Inside your App.jsx or Profile component file
 import React, { useEffect, useState } from 'react';
 
-function Profile() {
+function Profile(props) {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {

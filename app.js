@@ -4,32 +4,24 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const path = require('path');
-const Challenge = require('./models/challenge');
 const fetch = require('node-fetch');
 const User = require('./models/User');
-const challengesRouter = require('./routes/challengesR');
 const AuthRoutes = require('./routes/auth');
 const dotenv = require('dotenv');
 const logout = require('./routes/logout');
 const userRouter = require('./routes/userRouter');
-
 const UserControllers = require('./controllers/UserController');
-
-
-
 const authenticate = require('./middleware/authenticate');
+const url = require('url');
 
-const router = express.Router();
 
 const app = express();
 const port = process.env.PORT || 3000;
 require('dotenv').config();
 
 
-
-const url = require('url');
-
 const MONGODB_URI = process.env.MONGODB_URI;
+
 
 function encodeMongoURI(uri) {
   const parsedUri = url.parse(uri, true);  // Parse the URI and its query parameters
@@ -69,8 +61,6 @@ mongoose.connect(encodedMongoURI, {
   }));
   
 
-
-
   const logSession = (req, res, next) => {
     console.log('Session data:', req.session);
     next();
@@ -78,18 +68,10 @@ mongoose.connect(encodedMongoURI, {
   
   app.use(logSession);
 
-
-
-
-
-
-
-
   app.use(morgan('dev'));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  
 
   app.get('/login', (req, res) => {
     const loginFilePath = path.join(__dirname, 'public', 'login.html');
@@ -116,8 +98,6 @@ mongoose.connect(encodedMongoURI, {
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use('/dist', express.static(path.join(__dirname, 'dist')));
-
-  
 
   app.use('/auth', AuthRoutes);
 

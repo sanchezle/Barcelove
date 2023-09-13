@@ -1,3 +1,11 @@
+const express = require('express');
+const router = express.Router();
+const User = require('../models/User');
+
+// Your existing code...
+
+
+
 router.get('/api/profile', async (req, res) => {
   try {
     console.log('Received request for /api/profile');
@@ -26,3 +34,5 @@ router.get('/api/profile', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+module.exports = router;

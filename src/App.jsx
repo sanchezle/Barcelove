@@ -1,15 +1,16 @@
-
 import React from 'react';
-import Profile from './components/UserProfile';
+import UserDataContainer from './containers/UserDataContainer';
+import UserDataPresentation from './components/UserPresentation';
 
-function App() {
+const App = () => {
   return (
     <div>
-      <h1>Hello, world!</h1>
-      <Profile />
+      <h1>My App</h1>
+      <UserDataContainer>
+        {(userData) => <UserDataPresentation data={userData} />}
+      </UserDataContainer>
     </div>
   );
-}
+};
 
 export default App;
-

@@ -17,6 +17,7 @@ const url = require('url');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 require('dotenv').config();
 
 
@@ -68,7 +69,9 @@ mongoose.connect(encodedMongoURI, {
   
   app.use(logSession);
 
+  
   app.use(morgan('dev'));
+  
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 

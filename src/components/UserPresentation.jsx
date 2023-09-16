@@ -8,8 +8,8 @@ const UserDataPresentation = ({ data }) => {
   
   return (
     <div>
-      <h1>{data.username}</h1>
-      <p>Email: {data.email}</p>
+      <h1>Hello {data.username}</h1>
+      <h1>Email: {data}</h1>
     </div>
   );
 };

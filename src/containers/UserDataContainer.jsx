@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
-const UserDataContainer = ({ children }) => {
-  const [userData, setUserData] = useState(null);
+export default function UserDataContainer() {
+  const [userData, setUserData] = useState({});
 
-  // Simulating fetching user data
   useEffect(() => {
     fetch('/api/profile')
-      .then((response) => response.json())
-      .then((data) => setUserData(data))
-      .catch((error) => console.error('Error fetching user data:', error));
+      .then(response => response.json())
+      .then(data => {
+        setUserData(data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, []);
 
-  // Call the child function and pass the user data
-  return children(userData);
-};
+  return (
+    <UserDataPresentational userData={userData} />
+  );
+}
 
-export default UserDataContainer;
+function UserDataPresentational({ userData }) {
+  return (
+    <div>
+      <h2>{userData.username}</h2>
+      <p>{userData.email}</p>
+      <img src={userData.picture} alt="Profile Picture" />
+      <p>{userData.description}</p>
+    </div>
+  );
+}
+
+
+
+// Path: barcelove/src/containers/UserDataContainer.jsx

@@ -10,7 +10,7 @@ const AuthRoutes = require('./routes/auth');
 const dotenv = require('dotenv');
 const logout = require('./routes/logout');
 const userRouter = require('./routes/userRouter');
-const UserControllers = require('./controllers/UserController');
+
 const authenticate = require('./middleware/authenticate');
 const url = require('url');
 

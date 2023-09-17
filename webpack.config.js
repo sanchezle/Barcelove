@@ -1,4 +1,7 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+
 
 module.exports = {
   mode: 'development', // or 'production'
@@ -27,5 +30,10 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'), // Directory to serve files from
     port: 3000 // Port number for development server
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html' // Update this
+    })
+  ]
 };

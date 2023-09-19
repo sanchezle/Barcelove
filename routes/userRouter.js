@@ -21,13 +21,15 @@ userRouter.get('/api/profile', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const { username, profile } = user;
+    const { email, username, profile } = user;
     
     console.log('Sending user data back to client');
     res.json({
+      email,
       username,
       picture: profile.picture,
       description: profile.description,
+  
     });
   } catch (error) {
     console.error('Error:', error);

@@ -1,52 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ProfilePic from './ProfilePic';  // Make sure to adjust the import to your file structure
+import Username from './Username';
 
-function Profile(props) {
-  const [userData, setUserData] = useState(null);
-  const [loadingError, setLoadingError] = useState(false);
+import './UserProfile.css'; // Importing the CSS
+
+
+export default function UserProfile() {
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
+    // Fetch current profile data from /api/profile
     fetch('/api/profile')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Data fetched:', data);
+      .then((response) => response.json())
+      .then((data) => {
         setUserData(data);
       })
-      .catch(error => {
-        console.error('There was an error fetching user data:', error);
-        setLoadingError(true);
+      .catch((error) => {
+        console.error('Error fetching user data:', error);
       });
   }, []);
 
-  if (loadingError) {
-    return <p>There was an error loading the profile.</p>;
-  }
-
-  if (!userData) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <div>
-      <h1>{userData.username}</h1>
-      
-      {userData.picture ? (
-        <img src={userData.picture} alt="Profile" />
-      ) : (
-        <p>No profile picture available.</p>
-      )}
-
-      {userData.description ? (
-        <p>{userData.description}</p>
-      ) : (
-        <p>No profile description available.</p>
-      )}
+      <Username />
+      <h2>{userData.email}</h2>
+      <p>{userData.description}</p>
+      <ProfilePic />
     </div>
   );
 }
 
-export default Profile;

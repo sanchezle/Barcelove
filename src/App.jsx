@@ -1,16 +1,11 @@
 import React from 'react';
-import UserDataContainer from './containers/UserDataContainer';
-import UserDataPresentation from './components/UserPresentation';
+import UserProfile from './components/UserProfile';  // Notice the './'
 
 const App = () => {
   return (
     <div>
-      <h1>My App</h1>
-      <UserDataContainer>
-        {(userData) => <UserDataPresentation data={userData} />}
-      </UserDataContainer>
+      <UserProfile />
     </div>
   );
-};
-
+}
 export default App;

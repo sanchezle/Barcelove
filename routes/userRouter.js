@@ -6,7 +6,7 @@ const User = require('../models/User');
 
 
 
-userRouter.get('/api/profile', async (req, res) => {
+userRouter.get('/', async (req, res) => {
   try {
     console.log('Received request for /api/profile');
     
@@ -27,9 +27,7 @@ userRouter.get('/api/profile', async (req, res) => {
     res.json({
       email,
       username,
-      picture: profile.picture,
-      description: profile.description,
-  
+      profile,
     });
   } catch (error) {
     console.error('Error:', error);
@@ -37,4 +35,76 @@ userRouter.get('/api/profile', async (req, res) => {
   }
 });
 
+// Update profile picture
+userRouter.put('/picture', async (req, res) => {
+  try {
+    const userId = req.userId || 'some-hardcoded-userId';
+    const { newPictureBase64 } = req.body;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.profile.picture = newPictureBase64;
+
+    await user.save();
+    res.status(200).json({ message: 'Profile picture updated' });
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get current username
+userRouter.get('/username', async (req, res) => {
+  try {
+      const userId = req.userId || 'some-hardcoded-userId';
+      const user = await User.findById(userId);
+      
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+      res.status(200).json({ username: user.username });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update username
+userRouter.put('/username', async (req, res) => {
+  try {
+      const userId = req.userId || 'some-hardcoded-userId';
+      const { newUsername } = req.body;
+
+      // Check if newUsername already exists
+      const existingUser = await User.findOne({ username: newUsername });
+      if (existingUser) {
+          return res.status(400).json({ error: 'Username exists, try another one.' });
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      user.username = newUsername;
+      await user.save();
+      res.status(200).json({ message: 'Username updated' });
+
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
 module.exports = userRouter;
+
+

@@ -28,6 +28,7 @@ userRouter.get('/', async (req, res) => {
       email,
       username,
       profile,
+      isOwner: true,
     });
   } catch (error) {
     console.error('Error:', error);

@@ -11,6 +11,13 @@ const userSchema = new mongoose.Schema({
         description: { type: String, default: '' },
         picture: { type: String, default: '' },
     },
+    roles: [{
+        roleName: { type: String, enum: ['admin', 'user'] }
+    }],
+    active: {
+        type: Boolean, 
+        default: true
+    },
     wallet: {
         balance: { type: Number, default: 0 },
         currency: { type: String, default: 'USD' },

@@ -1,95 +1,47 @@
-// External modules
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const morgan = require('morgan');
-const path = require('path');
-const dotenv = require('dotenv').config();
-const fetch = require('node-fetch');
-const url = require('url');
-const cors = require('cors');
-const errorHandler = require('./middleware/errorHandler');
-const cookieParser = require('cookie-parser');
-const {logger, logEvents} = require('./middleware/logger');
-const corsOptions = require('./config/corsOptions');
-const connectDB = require('./config/dbconn')
+require('dotenv').config()
+require('express-async-errors')
+const express = require('express')
+const app = express()
+const path = require('path')
+const { logger, logEvents } = require('./middleware/logger')
+const errorHandler = require('./middleware/errorHandler')
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
+const corsOptions = require('./config/corsOptions')
+const connectDB = require('./config/dbConn')
+const mongoose = require('mongoose')
+const PORT = process.env.PORT || 3000
+const User = require('./models/User')
+console.log(process.env.NODE_ENV)
 
+connectDB()
 
-// Internal modules
-const User = require('./models/User');
-const AuthRoutes = require('./routes/auth');
-const logout = require('./routes/logout');
-const userRouter = require('./routes/userRouter');
-const authenticate = require('./middleware/authenticate');
-const MongoStoreFactory = require('connect-mongo');
+app.use(logger)
 
-// Variables
-const app = express();
-const port = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI;
+User.findOneAndUpdate(
+    { username: "Master1" },
+    { $set: { roles: ["Employee"] } },
+    { new: true, upsert: true }
+).then(doc => {
+    console.log(doc);
+}).catch(err => {
+    console.error("Error when updating data:", err);
+});
 
-// Functions
+app.use(cors(corsOptions))
 
+app.use(express.json())
 
-    // Middlewares
-    connectDB();
+app.use(cookieParser())
 
-    app.use(logger);
-    
-    app.use(express.json());
-    
-    app.use(cookieParser());
+app.use('/', express.static(path.join(__dirname, 'public')))
 
+app.use('/', require('./routes/root'))
+app.use('/auth', require('./routes/authRoutes'))
+app.use('/users', require('./routes/userRoutes'))
+app.use('/notes', require('./routes/noteRoutes'))
 
-
-    app.use(cors(corsOptions));
-    
-    app.use(morgan('dev'));
-    
-    app.use(bodyParser.urlencoded({ extended: true }));
-    
-    app.use(bodyParser.json({ limit: '10mb' }));
-    
-    //app.use(session({
-        ///secret: process.env.SECRET_SESSION_TOKEN,
-        //resave: false,
-        //saveUninitialized: true,
-        //store: MongoStore,
-        ///cookie: { maxAge: 60000 * 30 }
-    //}));
-    ///app.use((req, res, next) => {
-       // console.log('Session data:', req.session);
-        //next();
-    //});
-    
-    app.use('/', express.static(path.join(__dirname, 'public')));
-
-    // Routes
-    app.use('/', require('./routes/root'));
-
-
-    //app.get('/login', (req, res) => {
-        //res.sendFile(path.join(__dirname, 'public', 'login.html'));
-    //});
-    //app.get('/register', (req, res) => {
-        //res.sendFile(path.join(__dirname, 'public', 'register.html'));
-    //});
-    //app.get('/password-reset-request', (req, res) => {
-      //  res.sendFile(path.join(__dirname, 'public', 'resetpassword.html'));
-    //});
-    //app.get('/auth/reset-password/:token', (req, res) => {
-     //   res.sendFile(path.join(__dirname, 'public','reset-password.html'));
-    //});
-    
-    
-    //app.use('/auth', AuthRoutes);
-
-    //const privateRouter = express.Router();
-    ///privateRouter.use(authenticate);
-    //.use('/', privateRouter);
-
-    app.all('*', (req, res) => {
+app.all('*', (req, res) => {
     res.status(404)
     if (req.accepts('html')) {
         res.sendFile(path.join(__dirname, 'views', '404.html'))
@@ -98,19 +50,16 @@ const MONGODB_URI = process.env.MONGODB_URI;
     } else {
         res.type('txt').send('404 Not Found')
     }
-    })
+})
 
+app.use(errorHandler)
 
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB')
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+})
 
-    app.use(errorHandler);
-
-
-    mongoose.connection.once('open', () => {
-        console.log('Connected to MongoDB')
-        app.listen(port, () => console.log(`Server running on in http://localhost:${port}`))
-    })
-    
-    mongoose.connection.on('error', err => {
-        console.log(err)
-        logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
-    })
+mongoose.connection.on('error', err => {
+    console.log(err)
+    logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
+})

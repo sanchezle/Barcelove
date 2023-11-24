@@ -2,6 +2,10 @@ const User = require('../models/User')
 const Note = require('../models/Note')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
+const { sendConfirmationEmail } = require('./emailService'); // Importing the email service
+const jwt = require('jsonwebtoken');
+
+
 
 // @desc Get all users
 // @route GET /users
@@ -22,34 +26,41 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @route POST /users
 // @access Private
 const createNewUser = asyncHandler(async (req, res) => {
-    const { username, password, roles } = req.body
+    const { username, password, roles, email } = req.body;
 
     // Confirm data
-    if (!username || !password || !Array.isArray(roles) || !roles.length) {
-        return res.status(400).json({ message: 'All fields are required' })
+    if (!username || !password || !email || !Array.isArray(roles) || !roles.length) {
+        return res.status(400).json({ message: 'All fields are required' });
     }
 
     // Check for duplicate username
-    const duplicate = await User.findOne({ username }).lean().exec()
+    const duplicateUsername = await User.findOne({ username }).lean().exec();
 
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate username' })
+    if (duplicateUsername) {
+        return res.status(409).json({ message: 'Duplicate username' });
+    }
+
+    // Check for duplicate email (optional, if you want to ensure unique emails)
+    const duplicateEmail = await User.findOne({ email }).lean().exec();
+
+    if (duplicateEmail) {
+        return res.status(409).json({ message: 'Duplicate email' });
     }
 
     // Hash password 
-    const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
+    const hashedPwd = await bcrypt.hash(password, 10); // salt rounds
 
-    const userObject = { username, "password": hashedPwd, roles }
+    const userObject = { username, "password": hashedPwd, roles, email };
 
     // Create and store new user 
-    const user = await User.create(userObject)
+    const user = await User.create(userObject);
 
     if (user) { //created 
-        res.status(201).json({ message: `New user ${username} created` })
+        res.status(201).json({ message: `New user ${username} created` });
     } else {
-        res.status(400).json({ message: 'Invalid user data received' })
+        res.status(400).json({ message: 'Invalid user data received' });
     }
-})
+});
 
 // @desc Update a user
 // @route PATCH /users
@@ -122,8 +133,56 @@ const deleteUser = asyncHandler(async (req, res) => {
     res.json(reply)
 })
 
+
+
+const registerUser = asyncHandler(async (req, res) => {
+    const { username, password, roles, email } = req.body;
+
+    // Confirm data
+    if (!username || !password || !email) {
+        return res.status(400).json({ message: 'Username, password, and email are required' });
+    }
+
+    // Check for duplicate username
+    const duplicateUsername = await User.findOne({ username }).lean().exec();
+    if (duplicateUsername) {
+        return res.status(409).json({ message: 'Duplicate username' });
+    }
+
+    // Check for duplicate email
+    const duplicateEmail = await User.findOne({ email }).lean().exec();
+    if (duplicateEmail) {
+        return res.status(409).json({ message: 'Duplicate email' });
+    }
+
+    // Hash password
+    const hashedPwd = await bcrypt.hash(password, 10);
+
+    // Create user object
+    const userObject = { username, password: hashedPwd, roles, email };
+
+    // Create and store new user
+    const user = await User.create(userObject);
+
+    if (user) {
+        // User created successfully, now send confirmation email
+        const token = jwt.sign({ userId: user._id }, process.env.CEMAIL_TOKEN_SECRET, { expiresIn: '1d' });
+        
+        sendConfirmationEmail(user, token, req.headers.host)
+            .then(() => console.log('Confirmation email sent'))
+            .catch((error) => console.error('Error sending email:', error));
+        
+        res.status(201).json({ message: `New user ${username} created` });
+    } else {
+        res.status(400).json({ message: 'Invalid user data received' });
+    }
+});
+
+
+
 module.exports = {
     getAllUsers,
+    registerUser,
     createNewUser,
     updateUser,
     deleteUser

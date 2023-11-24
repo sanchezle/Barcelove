@@ -1,9 +1,0 @@
-Total occurrences of 'employee': 3
-
-In file: /home/luis/Documents/live/barcelove/node_modules/mongoose/lib/model.js
-Occurrences: 2
-Lines: [1163, 1164]
-
-In file: /home/luis/Documents/live/barcelove/node_modules/mongoose/lib/aggregate.js
-Occurrences: 1
-Lines: [499]

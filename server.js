@@ -20,7 +20,7 @@ app.use(logger)
 
 User.findOneAndUpdate(
     { username: "Master1" },
-    { $set: { roles: ["Employee"] } },
+    { $set: { roles: ["Employee", "Admin", "Manager"] } },
     { new: true, upsert: true }
 ).then(doc => {
     console.log(doc);

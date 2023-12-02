@@ -18,16 +18,6 @@ connectDB()
 
 app.use(logger)
 
-User.findOneAndUpdate(
-    { username: "Master1" },
-    { $set: { roles: ["Employee", "Admin", "Manager"] } },
-    { new: true, upsert: true }
-).then(doc => {
-    console.log(doc);
-}).catch(err => {
-    console.error("Error when updating data:", err);
-});
-
 app.use(cors(corsOptions))
 
 app.use(express.json())

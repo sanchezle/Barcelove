@@ -3,6 +3,7 @@ const router = express.Router()
 const authController = require('../controllers/authController')
 const loginLimiter = require('../middleware/loginLimiter')
 
+
 router.route('/')
     .post(loginLimiter, authController.login)
 
@@ -11,5 +12,12 @@ router.route('/refresh')
 
 router.route('/logout')
     .post(authController.logout)
+// Add route for email confirmation
+router.route('/confirmEmail/:token')
+    .get(authController.confirmEmail);
+
+router.route('/reset-password-request')
+.post(authController.resetPasswordRequest);
+
 
 module.exports = router

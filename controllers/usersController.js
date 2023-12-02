@@ -4,6 +4,7 @@ const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 const { sendConfirmationEmail } = require('./emailService'); // Importing the email service
 const jwt = require('jsonwebtoken');
+const config = require('../config/config')
 
 
 
@@ -167,17 +168,17 @@ const registerUser = asyncHandler(async (req, res) => {
     if (user) {
         // User created successfully, now send confirmation email
         const token = jwt.sign({ userId: user._id }, process.env.CEMAIL_TOKEN_SECRET, { expiresIn: '1d' });
-        
-        sendConfirmationEmail(user, token, req.headers.host)
+
+        // Update the email verification link with dynamic host URL
+        sendConfirmationEmail(user, `${config.hostUrl}/auth/confirmEmail/${token}`)
             .then(() => console.log('Confirmation email sent'))
             .catch((error) => console.error('Error sending email:', error));
-        
+
         res.status(201).json({ message: `New user ${username} created` });
     } else {
         res.status(400).json({ message: 'Invalid user data received' });
     }
 });
-
 
 
 module.exports = {

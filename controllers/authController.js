@@ -1,7 +1,10 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
+const sgMail = require('@sendgrid/mail');
+const crypto = require('crypto');
+const {sendPasswordResetEmail} = require('./emailService')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // @desc Login
 // @route POST /auth
 // @access Public
@@ -87,6 +90,59 @@ const refresh = (req, res) => {
     )
 }
 
+
+const confirmEmail = async (req, res) => {
+    const { token } = req.params;
+
+    try {
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.CEMAIL_TOKEN_SECRET);
+
+        // Update user's isVerified status
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: decodedToken.userId },
+            { isVerified: true },
+            { new: true }
+        );
+
+        if (updatedUser) {
+            // Redirect to a confirmation page or send a success response
+            res.redirect('http://localhost:3002/emailConfirmed'); // Example redirect
+            // OR
+            // res.json({ message: 'Account verified successfully' });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        if (error instanceof jwt.JsonWebTokenError) {
+            res.status(400).json({ message: 'Invalid or expired token' });
+        } else {
+            res.status(500).json({ message: 'An error occurred during the verification process' });
+        }
+    }
+};
+
+const resetPasswordRequest = async (req, res) => {
+    try {
+        // Find user by email (assuming email is in req.body)
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) {
+            return res.status(404).send('User not found.');
+        }
+
+        // Generate a reset password token and update user
+        // The token generation and saving is now handled in sendPasswordResetEmail
+        await sendPasswordResetEmail(user);
+
+        res.send('Password reset email sent.');
+    } catch (error) {
+        res.status(500).send('Error resetting password: ' + error.message);
+    }
+};
+
+
+
+
 // @desc Logout
 // @route POST /auth/logout
 // @access Public - just to clear cookie if exists
@@ -98,7 +154,13 @@ const logout = (req, res) => {
 }
 
 module.exports = {
+
     login,
     refresh,
-    logout
+    logout,
+    confirmEmail,
+    resetPasswordRequest 
+ 
+    
+
 }

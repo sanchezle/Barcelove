@@ -134,13 +134,40 @@ const resetPasswordRequest = async (req, res) => {
         // The token generation and saving is now handled in sendPasswordResetEmail
         await sendPasswordResetEmail(user);
 
-        res.send('Password reset email sent.');
+        res.json({ message: "Password reset email code sent" });
     } catch (error) {
-        res.status(500).send('Error resetting password: ' + error.message);
+        res.json({ message: "Error resetting pasword." + error.message});
     }
 };
 
+const resetPasswordConfirm = async (req, res) => {
+    const { token, email, newPassword } = req.body;
 
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Check if the token is valid and not expired
+        if (user.resetPasswordToken !== token || Date.now() > user.resetPasswordTokenExpires) {
+            return res.status(400).json({ message: "Wrong code or code has expired." });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update user's password and clear the reset token fields
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordTokenExpires = undefined;
+        await user.save();
+
+        res.json({ message: "Password reset successfully." });
+    } catch (error) {
+        res.status(500).json({ message: 'An error occurred: ' + error.message });
+    }
+};
 
 
 // @desc Logout
@@ -159,8 +186,6 @@ module.exports = {
     refresh,
     logout,
     confirmEmail,
-    resetPasswordRequest 
- 
-    
-
+    resetPasswordRequest,
+    resetPasswordConfirm 
 }

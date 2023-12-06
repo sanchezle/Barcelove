@@ -565,3 +565,7 @@
 20231204	13:12:06	78d8ccfa-41b3-4e09-9927-c96a40571a5c	GET	/users	http://localhost:3002
 20231204	13:12:15	99eaf723-85ab-459d-8954-7c9b2438c4a0	OPTIONS	/auth/logout	http://localhost:3002
 20231204	13:12:15	47dbc633-5fc7-4667-abd9-c053a1f8b7b4	POST	/auth/logout	http://localhost:3002
+20231206	12:43:44	2bca1dc5-ff1e-49d6-b8cc-9344e8ebc0e5	GET	/	undefined
+20231206	12:43:44	c33dd05c-bcf6-4195-8306-634d9b89149b	GET	/style.css	undefined
+20231206	12:43:44	862fa67f-6b2d-4626-9fcd-387bcb54d052	GET	/pictures/arc-triomf_888_1.jpg	undefined
+20231206	12:43:44	02c654a2-9af4-4626-9f95-abc15593e0f3	GET	/favicon.ico	undefined

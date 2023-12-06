@@ -569,3 +569,11 @@
 20231206	12:43:44	c33dd05c-bcf6-4195-8306-634d9b89149b	GET	/style.css	undefined
 20231206	12:43:44	862fa67f-6b2d-4626-9fcd-387bcb54d052	GET	/pictures/arc-triomf_888_1.jpg	undefined
 20231206	12:43:44	02c654a2-9af4-4626-9f95-abc15593e0f3	GET	/favicon.ico	undefined
+20231206	14:44:42	cc563314-535d-404d-a176-b580a1d1e626	OPTIONS	/auth	http://localhost:3002
+20231206	14:44:42	d4cd53bf-1dd5-4dcf-8b7c-cefe17e04cba	POST	/auth	http://localhost:3002
+20231206	14:44:42	c5ed6905-f901-420d-900b-122bdc7016ff	OPTIONS	/notes	http://localhost:3002
+20231206	14:44:42	863f2f9d-84d3-4808-86d6-8caffb7441dc	OPTIONS	/users	http://localhost:3002
+20231206	14:44:42	dfee4b6e-0993-48ed-ba86-2a9ac01a142a	GET	/notes	http://localhost:3002
+20231206	14:44:42	14709f7a-4228-4860-a3c6-4256f7398850	GET	/users	http://localhost:3002
+20231206	14:44:44	ddedd00e-15cf-4e52-ac0c-8d9b1aff95e2	OPTIONS	/auth/logout	http://localhost:3002
+20231206	14:44:44	3573f7f6-3508-49e9-ad05-0a6d526907df	POST	/auth/logout	http://localhost:3002

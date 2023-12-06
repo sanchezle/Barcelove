@@ -553,3 +553,15 @@
 20231203	17:55:15	b5f48a2c-3278-48fd-ab4a-cf8f177b416c	OPTIONS	/users	http://localhost:3002
 20231203	17:55:15	1f9336f1-a867-4a75-997d-38efebda4bf5	GET	/users	http://localhost:3002
 20231203	17:55:15	a9317de7-57bf-4b78-8333-7e1e0b81a62c	GET	/notes	http://localhost:3002
+20231204	13:11:06	8672874b-9795-4b56-8b5d-75c8261ff27a	OPTIONS	/auth/reset-password-request	http://localhost:3002
+20231204	13:11:07	e0a90fc2-363c-4035-8202-34ffbda4319b	POST	/auth/reset-password-request	http://localhost:3002
+20231204	13:11:49	6c245624-dff0-4b73-953b-77365ea5d633	OPTIONS	/auth/reset-password-confirm	http://localhost:3002
+20231204	13:11:49	9a85335c-0e5f-473a-973b-1bbbf437b019	POST	/auth/reset-password-confirm	http://localhost:3002
+20231204	13:12:05	7b3ca204-c696-4ff4-b623-c36c88df9d2b	OPTIONS	/auth	http://localhost:3002
+20231204	13:12:05	c1bc2d9a-df71-4064-94b1-3ecb55d413c6	POST	/auth	http://localhost:3002
+20231204	13:12:06	0edc8a9b-5251-4faf-be0a-afd01a9bdb79	OPTIONS	/notes	http://localhost:3002
+20231204	13:12:06	545060de-a0b4-4e54-9fe3-8f6a1ccaf466	GET	/notes	http://localhost:3002
+20231204	13:12:06	cd49e686-740c-4b35-bb13-eddef022bf91	OPTIONS	/users	http://localhost:3002
+20231204	13:12:06	78d8ccfa-41b3-4e09-9927-c96a40571a5c	GET	/users	http://localhost:3002
+20231204	13:12:15	99eaf723-85ab-459d-8954-7c9b2438c4a0	OPTIONS	/auth/logout	http://localhost:3002
+20231204	13:12:15	47dbc633-5fc7-4667-abd9-c053a1f8b7b4	POST	/auth/logout	http://localhost:3002

@@ -577,3 +577,8 @@
 20231206	14:44:42	14709f7a-4228-4860-a3c6-4256f7398850	GET	/users	http://localhost:3002
 20231206	14:44:44	ddedd00e-15cf-4e52-ac0c-8d9b1aff95e2	OPTIONS	/auth/logout	http://localhost:3002
 20231206	14:44:44	3573f7f6-3508-49e9-ad05-0a6d526907df	POST	/auth/logout	http://localhost:3002
+20231207	12:00:31	6a145840-2294-482d-922f-e03a8ae8f4c5	POST	/auth/reset-password-request	undefined
+20231207	12:03:44	130a168e-ad62-4329-91a4-72c8e6533c92	POST	/auth/reset-password-request	undefined
+20231207	12:06:49	44e52e13-8a27-47a4-b943-3058a665fcd2	GET	/	undefined
+20231207	12:06:49	b6ea78ac-817c-4db5-8390-480185881df0	GET	/favicon.ico	undefined
+20231207	12:07:31	922c8dd4-1d36-4940-ab9f-de1e5158598d	POST	/auth/reset-password-request	undefined

@@ -582,3 +582,16 @@
 20231207	12:06:49	44e52e13-8a27-47a4-b943-3058a665fcd2	GET	/	undefined
 20231207	12:06:49	b6ea78ac-817c-4db5-8390-480185881df0	GET	/favicon.ico	undefined
 20231207	12:07:31	922c8dd4-1d36-4940-ab9f-de1e5158598d	POST	/auth/reset-password-request	undefined
+20240509	15:05:26	6f679266-e18f-409d-9328-ce0d8a4462c5	OPTIONS	/auth	http://localhost:3002
+20240509	15:05:26	ac7ff2f2-5d8f-4776-b681-8433911916d7	POST	/auth	http://localhost:3002
+20240509	15:06:11	e472a553-9076-482d-a35f-599fff8067d1	OPTIONS	/users	http://localhost:3002
+20240509	15:06:11	e61bf9ff-fa81-443c-a70c-76b3bc3e7277	POST	/users	http://localhost:3002
+20240509	15:07:29	75941848-0568-4430-abe3-bf954d874846	GET	/auth/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNjY2E0NDI5N2U4NjQwNGZlMGZmNWMiLCJpYXQiOjE3MTUyNTk5NzIsImV4cCI6MTcxNTM0NjM3Mn0.GZnyMZ4DSpp1Mwc40DksbVUkTkWqT3y5orYVquhkghg	undefined
+20240509	15:07:54	c96e154b-0e2e-4dd1-886e-d2444ee73c89	OPTIONS	/auth	http://localhost:3002
+20240509	15:07:54	198ff114-79ef-4d9d-b1a2-a5c68d32c6b0	POST	/auth	http://localhost:3002
+20240509	15:07:55	ebe49a0f-2e2a-4653-8c6b-bfc6da74dc35	OPTIONS	/notes	http://localhost:3002
+20240509	15:07:55	7c5ee031-eb87-4b09-a015-a3b5803cbc44	OPTIONS	/users	http://localhost:3002
+20240509	15:07:55	da5170c1-2fec-4d57-843f-0e6def6c0328	GET	/notes	http://localhost:3002
+20240509	15:07:55	07764d02-4c21-44c1-8b21-4478210fae37	GET	/users	http://localhost:3002
+20240509	15:08:05	463be956-2afc-4573-ab1f-575764f8df27	OPTIONS	/auth/logout	http://localhost:3002
+20240509	15:08:05	43b0473a-41ed-4b49-ab14-a9dc7f0fe8c7	POST	/auth/logout	http://localhost:3002

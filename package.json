@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/sanchezle/Barcelove#readme",
   "engines": {
-    "node":">=20.9.0"
+    "node": ">=20.9.0"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
@@ -45,6 +45,7 @@
     "express-rate-limit": "^7.1.4",
     "express-session": "^1.17.3",
     "fkill": "^8.1.1",
+    "jets": "^0.15.0",
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.8.1",
     "mongoose": "^7.3.4",

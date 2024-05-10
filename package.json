@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server",
     "dev": "nodemon server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/sanchezle/Barcelove#readme",
   "engines": {
-    "node": "20.9.0"
+    "node":">=20.9.0"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
